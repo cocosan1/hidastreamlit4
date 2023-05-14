@@ -15,24 +15,18 @@ with col1:
     with st.expander('アプリ概要', expanded=False):
         st.write('■ 売上分析')
         st.caption('全体/得意先一覧/得意先個別/エリア/TIF')
-        # st.write('■ 売上分析売上分析/データ読み込み自動版')
-        # st.caption('データが自動更新されています/毎日18:30')
-        st.caption('全体/得意先一覧/得意先個別/エリア/TIF')
         st.write('■ 売上分析/品番別傾向')
         st.caption('品番別の傾向分析')
         st.write('■ 月次レポート出力')
         st.caption('得意先との打ち合わせ用レポートの自動作成、出力')
 
-    link = '[売上分析](https://cocosan1-hidastreamlit3-allinone2-z8cark.streamlit.app/)'
+    link = '[売上分析](https://cocosan1-hidastreamlit4-allinone2-jv1drl.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    # link = '[売上分析/★データ読み込み自動版](https://cocosan1-hidastreamlit3-allinone-auto-w7vi90.streamlit.app/)'
-    # st.markdown(link, unsafe_allow_html=True)
-
-    link = '[売上分析/品番別傾向](https://cocosan1-hidastreamlit3-ranking-mwfyaf.streamlit.app/)'
+    link = '[売上分析/品番別傾向](https://cocosan1-hidastreamlit4-ranking-80xwnl.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[月次レポート出力](https://cocosan1-hidastreamlit3-report2-np3t5d.streamlit.app/)'
+    link = '[月次レポート出力](https://cocosan1-hidastreamlit4-report2-i9oc7w.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     #目標入力フォームdownload
