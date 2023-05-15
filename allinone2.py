@@ -997,12 +997,6 @@ with tab3:
         # selectbox target ***
         option_customer = st.selectbox('得意先を選択:', cust_list, key='tab31') 
 
-    # # *** selectbox 得意先名***
-    # customer = df_now['得意先名'].unique()
-    # option_customer = st.selectbox(
-    #     '得意先名:',
-    #     customer,   
-    # ) 
 
     #************************累計売上
     #年月表記
