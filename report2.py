@@ -1001,7 +1001,7 @@ if submitted:
         st.download_button(label='ダウンロード開始', data=data, file_name=f'report_{cust_name}.xlsx')
 
         #link
-        link = '[home](https://cocosan1-hidastreamlit3-linkpage-j6o5p1.streamlit.app/)'
-        st.markdown(link, unsafe_allow_html=True)
-        st.caption('homeに戻る')
+        link = '[home](https://cocosan1-hidastreamlit4-linkpage-7tmz81.streamlit.app/)'
+        st.sidebar.markdown(link, unsafe_allow_html=True)
+        st.sidebar.caption('homeに戻る')  
 
