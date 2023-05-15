@@ -984,13 +984,25 @@ with tab2:
 #**********************************************************************************************tab3
 with tab3:
     st.markdown('### ■ 得意先/個別')
+    st.markdown('#### 得意先の選択')
+    cust_text = st.text_input('得意先名の一部を入力 例）仙台港')
 
-    # *** selectbox 得意先名***
-    customer = df_now['得意先名'].unique()
-    option_customer = st.selectbox(
-        '得意先名:',
-        customer,   
-    ) 
+    cust_list = []
+    for cust_name in df_now['得意先名'].unique():
+        if cust_text in cust_name:
+            cust_list.append(cust_name)       
+
+    cust_list.insert(0, '--')
+    if cust_list != '':
+        # selectbox target ***
+        option_customer = st.selectbox('得意先を選択:', cust_list, key='tab31') 
+
+    # # *** selectbox 得意先名***
+    # customer = df_now['得意先名'].unique()
+    # option_customer = st.selectbox(
+    #     '得意先名:',
+    #     customer,   
+    # ) 
 
     #************************累計売上
     #年月表記
