@@ -5,14 +5,14 @@ import streamlit as st
 # import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import openpyxl
-# import datetime
+import datetime
 
 from func_collection import Graph
 
 st.set_page_config(page_title='売り上げ分析')
 st.markdown('## 売り上げ分析')
 
-@st.cache_data
+@st.cache_data(ttl=datetime.timedelta(hours=1))
 def make_data_now(file):
     df_now = pd.read_excel(
     file, sheet_name='受注委託移動在庫生産照会', \
@@ -33,7 +33,7 @@ def make_data_now(file):
 
     return df_now
 
-@st.cache_data
+@st.cache_data(ttl=datetime.timedelta(hours=1))
 def make_data_last(file):
     df_last = pd.read_excel(
     uploaded_file_last, sheet_name='受注委託移動在庫生産照会', \
@@ -2559,6 +2559,10 @@ with tab5:
         }
         selected_app_name = st.selectbox(label='分析項目の選択',
                                                 options=list(apps.keys()), key='tab5')
+        
+        link = '[home](https://cocosan1-hidastreamlit4-linkpage-7tmz81.streamlit.app/)'
+        st.sidebar.markdown(link, unsafe_allow_html=True)
+        st.sidebar.caption('homeに戻る')  
   
 
         # 選択されたアプリケーションを処理する関数を呼び出す
