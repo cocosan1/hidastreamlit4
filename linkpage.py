@@ -15,12 +15,19 @@ with col1:
     with st.expander('アプリ概要', expanded=False):
         st.write('■ 売上分析')
         st.caption('全体/得意先一覧/得意先個別/エリア/TIF')
+        st.caption('今期と前期のデータの期間が同じ')
+        st.write('■ 売上分析/前期通年')
+        st.caption('全体/得意先一覧/得意先個別/エリア/TIF')
+        st.caption('前期のデータは通年')
         st.write('■ 売上分析/品番別傾向')
         st.caption('品番別の傾向分析')
         st.write('■ 月次レポート出力')
         st.caption('得意先との打ち合わせ用レポートの自動作成、出力')
 
     link = '[売上分析](https://cocosan1-hidastreamlit4-allinone2-jv1drl.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[売上分析/前年通年](https://cocosan1-hidastreamlit4-allinone-allyear-u99utd.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[売上分析/品番別傾向](https://cocosan1-hidastreamlit4-ranking-80xwnl.streamlit.app/)'
