@@ -17,6 +17,9 @@ with col1:
     link = '[shop/来店者管理](https://cocosan1-kurax-py-gs-linkpage-rxa5f5.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[shop/成約予測メモ](https://cocosan1-shop-pred-calc-week-4dwsso.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
 
 with col2:
     img_megane = Image.open('img//電卓アイコン.jpg')
