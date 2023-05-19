@@ -2,15 +2,17 @@ import pandas as pd
 # import numpy as np
 from pandas.core.frame import DataFrame
 import streamlit as st
-# import plotly.figure_factory as ff
+import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import openpyxl
 import datetime
 
+# import os
+
 from func_collection import Graph
 
-st.set_page_config(page_title='売り上げ分析')
-st.markdown('## 売り上げ分析')
+st.set_page_config(page_title='売り上げ分析/前年通年')
+st.markdown('## 売り上げ分析/前年通年')
 
 @st.cache_data(ttl=datetime.timedelta(hours=1))
 def make_data_now(file):
@@ -20,36 +22,33 @@ def make_data_now(file):
 
     # *** 出荷月、受注月列の追加***
     df_now['出荷月'] = df_now['出荷日'].dt.month
-    # df_now['受注年月'] = df_now['受注日'].dt.strftime("%Y-%m")
-    # df_now['受注年月'] = pd.to_datetime(df_now['受注年月'])
+    df_now['受注月'] = df_now['受注日'].dt.month
     df_now['商品コード2'] = df_now['商　品　名'].map(lambda x: x.split()[0]) #品番
     df_now['商品コード3'] = df_now['商　品　名'].map(lambda x: str(x)[0:2]) #頭品番
     df_now['張地'] = df_now['商　品　名'].map(lambda x: x.split()[2] if len(x.split()) >= 4 else '') 
 
     # ***INT型への変更***
-    df_now[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月']] = \
-        df_now[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月']].fillna(0).astype('int64')
+    df_now[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月', '受注月']] = df_now[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月', '受注月']].fillna(0).astype('int64')
     #fillna　０で空欄を埋める
+
 
     return df_now
 
 @st.cache_data(ttl=datetime.timedelta(hours=1))
 def make_data_last(file):
     df_last = pd.read_excel(
-    uploaded_file_last, sheet_name='受注委託移動在庫生産照会', \
+    file, sheet_name='受注委託移動在庫生産照会', \
         usecols=[1, 3, 6, 8, 10, 14, 15, 16, 28, 31, 42, 50, 51, 52])
     df_last['出荷月'] = df_last['出荷日'].dt.month
-    df_last['受注年月'] = df_last['受注日'].dt.strftime("%Y-%m")
-    df_last['受注年月'] = pd.to_datetime(df_last['受注年月'])
+    df_last['受注月'] = df_last['受注日'].dt.month
     df_last['商品コード2'] = df_last['商　品　名'].map(lambda x: x.split()[0])
     df_last['商品コード3'] = df_last['商　品　名'].map(lambda x: str(x)[0:2]) #頭品番
     df_last['張地'] = df_last['商　品　名'].map(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
 
-    df_last[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月']] = \
-        df_last[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月']].fillna(0).astype('int64')
+    df_last[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月', '受注月']] = df_last[['数量', '単価', '金額', '出荷倉庫', '原価金額', '出荷月', '受注月']].fillna(0).astype('int64')
     #fillna　０で空欄を埋める
 
-    return df_last         
+    return df_last        
 
 with st.sidebar.expander('説明/タブ', expanded=False):
     st.write('全体')
@@ -115,31 +114,18 @@ with tab1:
         st.markdown('##### 売上（累計）')
         val_list = [now_total, last_total]
         x_list = ['今期', '前期']
-
-        graph_ecy = Graph()
-        graph_ecy.make_bar(val_list, x_list)    
+        graph.make_bar(val_list, x_list)    
 
     #*********************************************************************月別売上/前年比
     def earnings_comparison_month():
-
-        #年月表記
-        df_now2 = df_now.sort_values('受注日')
-        df_now2['受注年月'] = df_now2['受注日'].dt.strftime("%Y-%m")
-
-        df_last2 = df_last.sort_values('受注日')
-        df_last2['受注年月'] = df_last2['受注日'].dt.strftime("%Y-%m")
-
-        #index用monthリスト
-        month_list = df_now2['受注年月'].unique()
-
-
+        month_list = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         sales_now = []
         sales_last = []
         df_month = pd.DataFrame(index=month_list)
 
-        for (month_now, month_last) in zip(df_now2['受注年月'].unique(), df_last2['受注年月'].unique()):
-            sales_now_month =df_now2[df_now2['受注年月']==month_now]['金額'].sum()
-            sales_last_month =df_last2[df_last2['受注年月']==month_last]['金額'].sum()
+        for month in month_list:
+            sales_now_month =df_now[df_now['受注月']==month]['金額'].sum()
+            sales_last_month =df_last[df_last['受注月']==month]['金額'].sum()
 
             sales_now.append(sales_now_month)
             sales_last.append(sales_last_month)
@@ -180,17 +166,15 @@ with tab1:
 
         df_list = [df_konki, df_zenki]
         name_list =['今期', '前期']
-
-        graph_ecm1 = Graph()
-        graph_ecm1.make_line(df_list, name_list, month_list)
+        graph.make_line_nonXlist(df_list, name_list)
 
 
         #累計
         st.markdown('##### 月別累計売上')
+
         df_list = [df_rkonki, df_rzenki]
         name_list =['今期', '前期']
-
-        graph.make_line(df_list, name_list, month_list)
+        graph.make_line_nonXlist(df_list, name_list)
 
     #*******************************************************************LD比率
     def living_dining_latio():
@@ -221,8 +205,6 @@ with tab1:
         list_now = [living_now, dining_now, sonota_now]
         list_last = [living_last, dining_last, sonota_last]
         x_list = ['リビング', 'ダイニング', 'その他']
-
-        
         graph.make_bar_nowlast(list_now, list_last, x_list)
 
         st.markdown('##### LD比率')
@@ -767,26 +749,12 @@ with tab2:
         st.dataframe(earnings_comparison_list)
 
     def earnings_comparison_month():
-
-        #年月表記
-        df_now2 = df_now.sort_values('受注日')
-        df_now2['受注年月'] = df_now2['受注日'].dt.strftime("%Y-%m")
-
-        df_last2 = df_last.sort_values('受注日')
-        df_last2['受注年月'] = df_last2['受注日'].dt.strftime("%Y-%m")
-
-        #index用monthリスト
-        month_list = df_now2['受注年月'].unique()
-
         # *** selectbox 得意先名***
+        month = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         option_month = st.selectbox(
         '受注月:',
-        month_list,   
-        ) 
-
-        temp_year = int(option_month.split('-')[0])
-        temp_year = temp_year - 1
-        option_month_last = str(temp_year) + '-' + option_month.split('-')[1]
+        month,   
+    ) 
         customer_list = df_now['得意先名'].unique()
 
         index = []
@@ -795,8 +763,8 @@ with tab2:
         comparison_rate = []
         comparison_diff = []
 
-        df_now_month = df_now2[df_now2['受注年月']==option_month]
-        df_last_month = df_last2[df_last2['受注年月']==option_month_last]
+        df_now_month = df_now[df_now['受注月']==option_month]
+        df_last_month = df_last[df_last['受注月']==option_month]
 
         earnings_now_total = df_now_month['金額'].sum()
         earnings_last_total = df_last_month['金額'].sum()
@@ -984,7 +952,8 @@ with tab2:
 #**********************************************************************************************tab3
 with tab3:
     st.markdown('### ■ 得意先/個別')
-    st.markdown('#### 得意先の選択')
+
+    st.markdown('#### target得意先の選択')
     cust_text = st.text_input('得意先名の一部を入力 例）仙台港')
 
     cust_list = []
@@ -992,26 +961,14 @@ with tab3:
         if cust_text in cust_name:
             cust_list.append(cust_name)       
 
-    cust_list.insert(0, '--')
     if cust_list != '':
         # selectbox target ***
         option_customer = st.selectbox('得意先を選択:', cust_list, key='tab31') 
 
 
     #************************累計売上
-    #年月表記
-    df_now2 = df_now.sort_values('受注日')
-    df_now2['受注年月'] = df_now2['受注日'].dt.strftime("%Y-%m")
-
-    df_last2 = df_last.sort_values('受注日')
-    df_last2['受注年月'] = df_last2['受注日'].dt.strftime("%Y-%m")
-
-    #index用monthリスト
-    month_list = df_now2['受注年月'].unique()
-    
-    
-    df_now_cust =df_now2[df_now2['得意先名']==option_customer]
-    df_last_cust =df_last2[df_last2['得意先名']==option_customer]
+    df_now_cust =df_now[df_now['得意先名']==option_customer]
+    df_last_cust =df_last[df_last['得意先名']==option_customer]
     now_cust_total = df_now_cust['金額'].sum()
     last_cust_total = df_last_cust['金額'].sum()
 
@@ -1039,20 +996,19 @@ with tab3:
         graph.make_bar(val_list, x_list)        
 
     def earnings_comparison_month():
-
-        
+        month_list = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         columns_list = ['今期', '前期', '対前年差', '対前年比']
-        df_now_cust = df_now2[df_now2['得意先名']==option_customer]
-        df_last_cust = df_last2[df_last2['得意先名']==option_customer]
+        df_now_cust = df_now[df_now['得意先名']==option_customer]
+        df_last_cust = df_last[df_last['得意先名']==option_customer]
 
         earnings_now = []
         earnings_last = []
         earnings_diff = []
         earnings_rate = []
 
-        for (month_now, month_last) in zip(df_now2['受注年月'].unique(), df_last2['受注年月'].unique()):
-            earnings_month_now = df_now_cust[df_now_cust['受注年月'].isin([month_now])]['金額'].sum()
-            earnings_month_last = df_last_cust[df_last_cust['受注年月'].isin([month_last])]['金額'].sum()
+        for month in month_list:
+            earnings_month_now = df_now_cust[df_now_cust['受注月'].isin([month])]['金額'].sum()
+            earnings_month_last = df_last_cust[df_last_cust['受注月'].isin([month])]['金額'].sum()
             earnings_diff_culc = earnings_month_now - earnings_month_last
             earnings_rate_culc = f'{earnings_month_now / earnings_month_last * 100: 0.1f} %'
 
@@ -1078,14 +1034,14 @@ with tab3:
         st.markdown('#### 月別売上')
 
         df_list = [df_earnings_month2['今期'], df_earnings_month2['前期']]
-        graph.make_line(df_list, x_list, month_list)
+        graph.make_line_nonXlist(df_list, x_list)
 
     def mean_earning_month():
         st.write('#### 平均成約単価')
-
+        month_list = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         columns_list = ['今期', '前期', '対前年差', '対前年比']
-        df_now_cust = df_now2[df_now2['得意先名']==option_customer]
-        df_last_cust = df_last2[df_last2['得意先名']==option_customer]
+        df_now_cust = df_now[df_now['得意先名']==option_customer]
+        df_last_cust = df_last[df_last['得意先名']==option_customer]
 
         order_num_now = []
         for num in df_now_cust['伝票番号']:
@@ -1105,12 +1061,12 @@ with tab3:
         earnings_diff = []
         earnings_rate = []
 
-        for (month_now, month_last) in zip(df_now2['受注年月'].unique(), df_last2['受注年月'].unique()):
-            earnings_month_now = df_now_cust[df_now_cust['受注年月'].isin([month_now])]
+        for month in month_list:
+            earnings_month_now = df_now_cust[df_now_cust['受注月'].isin([month])]
             order_sum_now = earnings_month_now.groupby('order_num')['金額'].sum()
             order_mean_now = order_sum_now.mean()
 
-            earnings_month_last = df_last_cust[df_last_cust['受注年月'].isin([month_last])]
+            earnings_month_last = df_last_cust[df_last_cust['受注月'].isin([month])]
             order_sum_last = earnings_month_last.groupby('order_num')['金額'].sum()
             order_mean_last = order_sum_last.mean()
 
@@ -1125,8 +1081,7 @@ with tab3:
             earnings_diff.append(order_mean_diff)
             earnings_rate.append(order_mean_rate)
 
-        df_mean_earninngs_month = pd.DataFrame(list(zip(earnings_now, earnings_last, earnings_diff, earnings_rate)), \
-                                               columns=columns_list, index=month_list)
+        df_mean_earninngs_month = pd.DataFrame(list(zip(earnings_now, earnings_last, earnings_diff, earnings_rate)), columns=columns_list, index=month_list)
         st.caption('受注月ベース')
 
         col1, col2 = st.columns(2)
@@ -1162,7 +1117,7 @@ with tab3:
         st.markdown('#### 平均成約単価')
         df_list = [df_mean_earninngs_month2['今期'], df_mean_earninngs_month2['前期']]
         x_list = ['今期', '前期']
-        graph.make_line(df_list, x_list, month_list)       
+        graph.make_line_nonXlist(df_list, x_list)       
         
     def living_dining_comparison():
         st.markdown('##### LD 前年比/構成比')
@@ -1228,7 +1183,7 @@ with tab3:
 
         # *** selectbox LD***
         category = ['リビング', 'ダイニング']
-        option_category = st.selectbox('category:', category, key='ldcl') 
+        option_category = st.selectbox('category:', category, key='tab32') 
         if option_category == 'リビング':
             df_now_cust_cate = df_now_cust[df_now_cust['商品分類名2'].isin(['クッション', 'リビングチェア', 'リビングテーブル'])]
             df_last_cust_cate = df_last_cust[df_last_cust['商品分類名2'].isin(['クッション', 'リビングチェア', 'リビングテーブル'])]
@@ -1273,10 +1228,7 @@ with tab3:
     def series():
         # *** selectbox 商品分類2***
         category = df_now['商品分類名2'].unique()
-        option_category = st.selectbox(
-            'category:',
-            category,   
-        ) 
+        option_category = st.selectbox('category:', category, key='tab33') 
         st.caption('構成比は下段')
         categorybase_now = df_now[df_now['商品分類名2']==option_category]
         categorybase_last = df_last[df_last['商品分類名2']==option_category]
@@ -1302,10 +1254,7 @@ with tab3:
     def item_count_category():
         # *** selectbox 得意先名***
         categories = df_now_cust['商品分類名2'].unique()
-        option_categories = st.selectbox(
-        '商品分類名2:',
-        categories,   
-        )    
+        option_categories = st.selectbox('商品分類名2:', categories, key='tab34')    
 
         index = []
         count_now = []
@@ -1317,7 +1266,7 @@ with tab3:
         series_list = df_now_cust[df_now_cust['商品分類名2']==option_categories]['シリーズ名'].unique()
         for series in series_list:
             index.append(series)
-            month_len = len(df_now2['受注年月'].unique())
+            month_len = len(df_now['受注月'].unique())
             df_now_cust_categories_count_culc = \
                 df_now_cust_categories[df_now_cust_categories['シリーズ名']==series]['数量'].sum()
             df_last_cust_categories_count_culc = \
@@ -1337,25 +1286,24 @@ with tab3:
         df_item_count2['今期'] = df_item_count2['今期'].apply(lambda x: float(x))
         df_item_count2['前期'] = df_item_count2['前期'].apply(lambda x: float(x))
 
+        st.write('回転数/月平均')
         graph.make_bar_nowlast_float(df_item_count2['今期'], df_item_count2['前期'], df_item_count2.index)
 
     def category_count_month():
         #　回転数 商品分類別 月毎
         # *** selectbox シリーズ名***
         category_list = df_now_cust['商品分類名2'].unique()
-        option_category = st.selectbox(
-        '商品分類名:',
-        category_list,   
-        ) 
+        option_category = st.selectbox('商品分類名:', category_list, key='tab35') 
         df_now_cust_category = df_now_cust[df_now_cust['商品分類名2']==option_category]
-
+        
+        months = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         count_now = []
         series_list = df_now_cust_category['シリーズ名'].unique()
         df_count = pd.DataFrame(index=series_list)
-        for month in df_now2['受注年月'].unique():
+        for month in months:
             for series in series_list:
                 df_now_cust_category_ser = df_now_cust_category[df_now_cust_category['シリーズ名']==series]
-                count = df_now_cust_category_ser[df_now_cust_category_ser['受注年月']==month]['数量'].sum()
+                count = df_now_cust_category_ser[df_now_cust_category_ser['受注月']==month]['数量'].sum()
                 count_now.append(count)
             df_count[month] = count_now
             count_now = []
@@ -1372,7 +1320,7 @@ with tab3:
         for col in df_count2.columns:
             fig.add_trace(
                 go.Scatter(
-                    x=df_now2['受注年月'].unique(),
+                    x=['10月', '11月', '12月', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月'], #strにしないと順番が崩れる
                     y=df_count2[col],
                     mode = 'lines+markers+text', #値表示
                     text=df_count2[col],
@@ -1495,10 +1443,7 @@ with tab3:
     def category_color():
         # *** selectbox 商品分類2***
         category = df_now['商品分類名2'].unique()
-        option_category = st.selectbox(
-            'category:',
-            category,   
-        ) 
+        option_category = st.selectbox( 'category:', category,  key='tab36') 
         categorybase_now = df_now[df_now['商品分類名2']==option_category]
         categorybase_last = df_last[df_last['商品分類名2']==option_category]
         categorybase_cust_now = categorybase_now[categorybase_now['得意先名']== option_customer]
@@ -1520,10 +1465,7 @@ with tab3:
     def category_fabric():
         # *** selectbox***
         category = ['ダイニングチェア', 'リビングチェア']
-        option_category = st.selectbox(
-            'category:',
-            category,   
-        ) 
+        option_category = st.selectbox( 'category:', category, key='tab37') 
         categorybase_now = df_now[df_now['商品分類名2']==option_category]
         categorybase_last = df_last[df_last['商品分類名2']==option_category]
         categorybase_cust_now = categorybase_now[categorybase_now['得意先名']== option_customer]
@@ -1561,10 +1503,7 @@ with tab3:
     def series_col_fab():
         # *** selectbox 商品分類2***
         category = df_now['商品分類名2'].unique()
-        option_category = st.selectbox(
-            'category:',
-            category,   
-        ) 
+        option_category = st.selectbox('category:', category, key='tab39') 
         categorybase_now = df_now[df_now['商品分類名2']==option_category]
         categorybase_last = df_last[df_last['商品分類名2']==option_category]
         categorybase_cust_now = categorybase_now[categorybase_now['得意先名']== option_customer]
@@ -1610,8 +1549,7 @@ with tab3:
             '売れ筋ランキング 商品分類別/塗色/張地●': series_col_fab
     
         }
-        selected_app_name = st.selectbox(label='分析項目の選択',
-                                                options=list(apps.keys()), key=tab3)
+        selected_app_name = st.selectbox(label='分析項目の選択',options=list(apps.keys()), key=tab3)
 
 
         # 選択されたアプリケーションを処理する関数を呼び出す
@@ -1650,7 +1588,6 @@ with tab4:
         diff = '{:,}'.format(int(df_results.loc['対前年差', '合計']))
         st.metric(label='対前年比', value=ratio, delta=diff)
 
-
         #可視化
         #グラフを描くときの土台となるオブジェクト
         fig = go.Figure()
@@ -1675,23 +1612,15 @@ with tab4:
         st.plotly_chart(fig, use_container_width=True) 
 
     def sales_month():
-        #年月表記
-        df_now2 = df_now.sort_values('受注日')
-        df_now2['受注年月'] = df_now2['受注日'].dt.strftime("%Y-%m")
+        month_list = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-        df_last2 = df_last.sort_values('受注日')
-        df_last2['受注年月'] = df_last2['受注日'].dt.strftime("%Y-%m")
-
-        #index用monthリスト
-        month_list = df_now2['受注年月'].unique()
-
-        df_now_cust = df_now2[df_now2['得意先名'].isin(area_list)]
-        df_last_cust = df_last2[df_last2['得意先名'].isin(area_list)]
+        df_now_cust = df_now[df_now['得意先名'].isin(area_list)]
+        df_last_cust = df_last[df_last['得意先名'].isin(area_list)]
 
         sum_list = []
-        for (month_now, month_last) in zip(df_now2['受注年月'].unique(), df_last2['受注年月'].unique()):
-            df_now_month = df_now_cust[df_now_cust['受注年月']==month_now]['金額'].sum()
-            df_last_month = df_last_cust[df_last_cust['受注年月']==month_last]['金額'].sum()
+        for month in month_list:
+            df_now_month = df_now_cust[df_now_cust['受注月']==month]['金額'].sum()
+            df_last_month = df_last_cust[df_last_cust['受注月']==month]['金額'].sum()
             temp_list = [df_now_month, df_last_month]
             sum_list.append(temp_list)
 
@@ -1704,7 +1633,7 @@ with tab4:
         for col in df_results.columns:
             fig.add_trace(
                 go.Scatter(
-                    x=month_list,
+                    x=['10月', '11月', '12月', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月'], #strにしないと順番が崩れる
                     y=df_results[col],
                     mode = 'lines+markers+text', #値表示
                     text=round(df_results[col]/10000),
@@ -1802,7 +1731,6 @@ with tab4:
 #*****************************************************************************************tab5
 with tab5:
     st.markdown('### ■ TIF')
-    
     # オリジナル比率（全体）
 
     df_now2 = df_now.copy()
@@ -1814,16 +1742,6 @@ with tab5:
 
     tif_now_total = df_now2['金額'].sum()
     tif_last_total = df_last2['金額'].sum()
-
-    #年月表記
-    df_now2 = df_now2.sort_values('受注日')
-    df_now2['受注年月'] = df_now2['受注日'].dt.strftime("%Y-%m")
-
-    df_last2 = df_last2.sort_values('受注日')
-    df_last2['受注年月'] = df_last2['受注日'].dt.strftime("%Y-%m")
-
-    #index用monthリスト
-    month_list = df_now2['受注年月'].unique()
 
     def none5():
         st.info('分析項目を選択してください')
@@ -1861,7 +1779,7 @@ with tab5:
         with col2:
             st.metric('対前年比', ratio, delta=diff2)    
 
-        customer_list = df_now['得意先名'].unique()
+        customer_list = df_now2['得意先名'].unique()
 
         index = []
         original_now = []
@@ -1925,7 +1843,7 @@ with tab5:
         
             st.metric('売上 対前年差', now_original_d_sum - last_original_d_sum) 
 
-        customer_list = df_now['得意先名'].unique()
+        customer_list = df_now2['得意先名'].unique()
 
         index = []
         original_now = []
@@ -1992,7 +1910,7 @@ with tab5:
         
             st.metric('売上 対前年差', now_original_l_sum - last_original_l_sum) 
 
-        customer_list = df_now['得意先名'].unique()
+        customer_list = df_now2['得意先名'].unique()
 
         index = []
         original_now = []
@@ -2082,7 +2000,7 @@ with tab5:
     def category_hinban_cnt():
 
         # *** selectbox 商品分類2***
-        category = df_now['商品分類名2'].unique()
+        category = df_now2['商品分類名2'].unique()
         option_category = st.selectbox(
             'category:',
             category,
@@ -2127,7 +2045,7 @@ with tab5:
     #回転数/シリーズ別/品番別       
     def series_hinban_cnt():
         # *** selectbox シリーズ***
-        series = df_now['シリーズ名'].unique()
+        series = df_now2['シリーズ名'].unique()
         option_series = st.selectbox(
             'series:',
             series,   
@@ -2165,7 +2083,7 @@ with tab5:
     #回転数/品番別/得意先別
     def category_hinban_cust_cnt():
         # *** selectbox 商品分類2***
-        category = df_now['商品分類名2'].unique()
+        category = df_now2['商品分類名2'].unique()
         option_category = st.selectbox(
             '商品分類:',
             category,   
@@ -2214,7 +2132,7 @@ with tab5:
     # 売上/シリーズ別/品番別
     def hinban_sum():
         # *** selectbox シリーズ***
-        series = df_now['シリーズ名'].unique()
+        series = df_now2['シリーズ名'].unique()
         option_series = st.selectbox(
             'series:',
             series,   
@@ -2262,7 +2180,7 @@ with tab5:
                 series,   
             ) 
             # *** selectbox 商品分類2***
-            category = df_now['商品分類名2'].unique()
+            category = df_now2['商品分類名2'].unique()
             option_category = st.selectbox(
                 'category:',
                 category,   
@@ -2327,7 +2245,7 @@ with tab5:
     def original_category_seriesearnings_sum():
         with st.form(key='original_category_seriesearnings_sum'):
             # *** selectbox 商品分類2***
-            category = df_now['商品分類名2'].unique()
+            category = df_now2['商品分類名2'].unique()
             option_category = st.selectbox(
                 'category:',
                 category,   
@@ -2405,7 +2323,7 @@ with tab5:
                 series,   
             ) 
             # *** selectbox 商品分類2***
-            category = df_now['商品分類名2'].unique()
+            category = df_now2['商品分類名2'].unique()
             option_category = st.selectbox(
                 'category:',
                 category,   
@@ -2413,17 +2331,17 @@ with tab5:
             submitted = st.form_submit_button('submit')
 
         customer_list = df_now2['得意先名'].unique()
-
+        months = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         df_now_series = df_now2[df_now2['シリーズ名']==option_series]
         df_now_series_cate = df_now_series[df_now_series['商品分類名2']==option_category]
         
         sum_now = []
         df_result = pd.DataFrame(index=customer_list)
 
-        for month in month_list:
+        for month in months:
             for customer in customer_list:
                 df_now_series_cate_cust = df_now_series_cate[df_now_series_cate['得意先名']==customer]
-                sum_month = df_now_series_cate_cust[df_now_series_cate_cust['受注年月']==month]['金額'].sum()
+                sum_month = df_now_series_cate_cust[df_now_series_cate_cust['受注月']==month]['金額'].sum()
                 sum_now.append('{:,}'.format(sum_month))
             df_result[month] = sum_now
             sum_now = []
@@ -2434,7 +2352,7 @@ with tab5:
     def original_category_series_earnings():
         with st.form(key='original_category_series_earnings'):
             # *** selectbox 商品分類2***
-            category = df_now['商品分類名2'].unique()
+            category = df_now2['商品分類名2'].unique()
             option_category = st.selectbox(
                 'category:',
                 category,   
@@ -2448,17 +2366,17 @@ with tab5:
             submitted = st.form_submit_button('submit')
             
         customer_list = df_now2['得意先名'].unique()
-        
+        months = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         df_now_cate = df_now2[df_now2['商品分類名2']==option_category]
         df_now_cate_series = df_now_cate[df_now_cate['シリーズ名']==option_series]
         
         sum_now = []
         df_result = pd.DataFrame(index=customer_list)
 
-        for month in month_list:
+        for month in months:
             for customer in customer_list:
                 df_now_cate_series_cust = df_now_cate_series[df_now_cate_series['得意先名']==customer]
-                sum_month = df_now_cate_series_cust[df_now_cate_series_cust['受注年月']==month]['金額'].sum()
+                sum_month = df_now_cate_series_cust[df_now_cate_series_cust['受注月']==month]['金額'].sum()
                 sum_now.append('{:,}'.format(sum_month))
             df_result[month] = sum_now
             sum_now = []
@@ -2556,11 +2474,7 @@ with tab5:
         }
         selected_app_name = st.selectbox(label='分析項目の選択',
                                                 options=list(apps.keys()), key='tab5')
-        
-        link = '[home](https://cocosan1-hidastreamlit4-linkpage-7tmz81.streamlit.app/)'
-        st.sidebar.markdown(link, unsafe_allow_html=True)
-        st.sidebar.caption('homeに戻る')  
-  
+
 
         # 選択されたアプリケーションを処理する関数を呼び出す
         render_func = apps[selected_app_name]

@@ -98,6 +98,32 @@ class Graph():
             )
             #plotly_chart plotlyを使ってグラグ描画　グラフの幅が列の幅
             st.plotly_chart(fig, use_container_width=True) 
+        
+                #**********************************************折れ線　non_xlist    
+        def make_line_nonXlist(self, df_list, name_list):
+            #グラフを描くときの土台となるオブジェクト
+            fig = go.Figure()
+            #今期のグラフの追加
+
+            for (df, name) in zip(df_list, name_list):
+
+                fig.add_trace(
+                go.Scatter(
+                    x=['10月', '11月', '12月', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月'], #strにしないと順番が崩れる
+                    y=df,
+                    mode = 'lines+markers+text', #値表示
+                    text=[round(val/10000) if val >= 10000 else int(val) for val in df],
+                    textposition="top center", 
+                    name=name)
+                    )  
+
+            #レイアウト設定     
+            fig.update_layout(
+                showlegend=True #凡例表示
+            )
+            #plotly_chart plotlyを使ってグラグ描画　グラフの幅が列の幅
+            st.plotly_chart(fig, use_container_width=True) 
+            
         #***************************************************************円
         def make_pie(self, vals, labels):
 
