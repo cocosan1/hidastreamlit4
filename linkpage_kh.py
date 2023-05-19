@@ -23,10 +23,7 @@ with col2:
     st.image(img_megane, width=50)
     st.markdown('###### 分析/星川')
 
-    link = '[★本日の受注](https://cocosan1-hida-gcp-today-ch262e.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
-
-    link = '[★売上分析/自動](https://cocosan1-hida-gcp-allinone-auto3-ji6zus.streamlit.app/)'
+    link = '[★本日の受注](https://cocosan1-hida-gcp-today-ofag3x.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[★売上分析/全体](https://cocosan1-hidastreamlit-kh-sales-kh2-hj7n9o.streamlit.app/)'
