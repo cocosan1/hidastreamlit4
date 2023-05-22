@@ -5,63 +5,91 @@ import streamlit as st
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import openpyxl
+import datetime
 
 from func_collection import Graph
 
 st.set_page_config(page_title='ranking')
 st.markdown('#### 品番別分析')
 
-# ***ファイルアップロード***
-uploaded_file = st.sidebar.file_uploader('Excel', type='xlsx', key='xlsx')
-df = DataFrame()
-if uploaded_file:
-    df = pd.read_excel(
-    uploaded_file, sheet_name='受注委託移動在庫生産照会', usecols=[2, 8, 9, 10, 15, 31, 42, 50, 51]) #index　ナンバー不要　index_col=0
+@st.cache_data(ttl=datetime.timedelta(hours=1))
+def make_data_now(file):
+    df_now = pd.read_excel(
+    file, sheet_name='受注委託移動在庫生産照会', \
+        usecols=[2, 8, 9, 10, 15, 31, 42, 50, 51]) #index　ナンバー不要　index_col=0
+
+    df_now['得意先CD2'] = df_now['得意先CD'].map(lambda x:str(x)[0:5])
+    df_now['商品コード2'] = df_now['商品コード'].map(lambda x: x.split()[0]) #品番
+
+
+    df_now['張地'] = df_now['商　品　名'].map(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
+    df_now['HTSサイズ'] = df_now['張地'].map(lambda x: x.split('x')[0]) #HTSサイズ
+    df_now['HTS形状'] = df_now['商　品　名'].map(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
+    df_now['HTS形状2'] = df_now['HTS形状'].map(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
+
+    # ***INT型への変更***
+    df_now[['数量', '金額', '原価金額']] = df_now[['数量', '金額', '原価金額']].fillna(0).astype('int64')
+    #fillna　０で空欄を埋める
+
+
+    return df_now
+
+@st.cache_data(ttl=datetime.timedelta(hours=1))
+def make_data_last(file):
+    df_last = pd.read_excel(
+    file, sheet_name='受注委託移動在庫生産照会', \
+        usecols=[2, 8, 9, 10, 15, 31, 42, 50, 51])
+    
+    df_last['得意先CD2'] = df_last['得意先CD'].map(lambda x:str(x)[0:5])
+    df_last['商品コード2'] = df_last['商品コード'].map(lambda x: x.split()[0]) #品番
+
+    df_last['張地'] = df_last['商　品　名'].map(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
+    df_last['HTSサイズ'] = df_last['張地'].map(lambda x: x.split('x')[0]) #HTSサイズ
+    df_last['HTS形状'] = df_last['商　品　名'].map(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
+    df_last['HTS形状2'] = df_last['HTS形状'].map(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
+
+    # ***INT型への変更***
+    df_last[['数量', '金額', '原価金額']] = df_last[['数量', '金額', '原価金額']].fillna(0).astype('int64')
+    #fillna　０で空欄を埋める
+
+    return df_last        
+
+
+# ***ファイルアップロード 今期***
+uploaded_file_now = st.sidebar.file_uploader('今期', type='xlsx', key='now')
+df_now = DataFrame()
+if uploaded_file_now:
+    df_now = make_data_now(uploaded_file_now)
+
 else:
     st.info('今期のファイルを選択してください。')
-    st.stop()
+
+
+# ***ファイルアップロード　前期***
+uploaded_file_last = st.sidebar.file_uploader('前期', type='xlsx', key='last')
+df_last = DataFrame()
+if uploaded_file_last:
+    df_last = make_data_last(uploaded_file_last)
     
-df['数量'] = df['数量'].fillna(0).astype('int64')
-df['金額'] = df['金額'].fillna(0).astype('int64')
-df['原価金額'] = df['原価金額'].fillna(0).astype('int64')
-
-df['得意先CD2'] = df['得意先CD'].map(lambda x:str(x)[0:5])
-df['商品コード2'] = df['商品コード'].map(lambda x: x.split()[0]) #品番
+else:
+    st.info('前期のファイルを選択してください。')
+    st.stop()
 
 
-df['張地'] = df['商　品　名'].map(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
-df['HTSサイズ'] = df['張地'].map(lambda x: x.split('x')[0]) #HTSサイズ
-df['HTS形状'] = df['商　品　名'].map(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
-df['HTS形状2'] = df['HTS形状'].map(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
-
-
-df2 = df[df['商品分類名2'].isin(['ダイニングチェア', 'リビングチェア'])]
+df2 = df_now[df_now['商品分類名2'].isin(['ダイニングチェア', 'リビングチェア'])]
 
 #graphインスタンス
 graph = Graph()
 
-#*********************************************************************************関数
-#***********************************bar
-# def make_bar(val_list, x_list):
-#     #可視化
-#     #グラフを描くときの土台となるオブジェクト
-#     fig = go.Figure()
-#     #今期のグラフの追加
-#     for (val, x) in zip(val_list, x_list):
-#         fig.add_trace(
-#             go.Bar(
-#                 x=[x],
-#                 y=[val],
-#                 text=[round(val/10000) if int(val) >= 10000 else int(val)],
-#                 textposition="outside", 
-#                 name=x)
-#         )
-#     #レイアウト設定     
-#     fig.update_layout(
-#         showlegend=False #凡例表示
-#     )
-#     #plotly_chart plotlyを使ってグラグ描画　グラフの幅が列の幅
-#     st.plotly_chart(fig, use_container_width=True) 
+st.write(df_now)
+
+def calc_deviation():
+    cate_list = ['リビングチェア', 'ダイニングチェア', 'ダイニングテーブル']
+    selected_cate = st.selectbox(
+        '商品分類',
+        cate_list
+    )
+    df_now2 = df_now[df_now['商品分類名2']==selected_cate]
 
 def ranking_series():
     # *** selectbox 商品分類2***
