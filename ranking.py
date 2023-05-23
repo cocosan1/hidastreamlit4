@@ -7,6 +7,8 @@ import plotly.graph_objects as go
 import openpyxl
 import datetime
 
+from sklearn.preprocessing import StandardScaler
+
 from func_collection import Graph
 
 st.set_page_config(page_title='ranking')
@@ -81,15 +83,69 @@ df2 = df_now[df_now['商品分類名2'].isin(['ダイニングチェア', 'リ�
 #graphインスタンス
 graph = Graph()
 
-st.write(df_now)
-
 def calc_deviation():
     cate_list = ['リビングチェア', 'ダイニングチェア', 'ダイニングテーブル']
     selected_cate = st.selectbox(
         '商品分類',
-        cate_list
+        cate_list,
+        key='cl'
     )
     df_now2 = df_now[df_now['商品分類名2']==selected_cate]
+    df_last2 = df_last[df_last['商品分類名2']==selected_cate]
+
+    df_now2['品番'] = df_now2['商　品　名'].apply(lambda x: x.split(' ')[0])
+    df_last2['品番'] = df_last2['商　品　名'].apply(lambda x: x.split(' ')[0])
+
+    df_now2['数量'] = df_now2['数量'].fillna(0)
+    df_last2['数量'] = df_last2['数量'].fillna(0)
+
+
+    df_now2g = df_now2.groupby('品番')['数量'].sum()
+    df_last2g = df_last2.groupby('品番')['数量'].sum()
+
+    #標準化
+    #今期
+    scaler = StandardScaler()
+    df_now2gr = df_now2g.values.reshape(-1, 1) #.values忘れない #reshape(-1, 1)で縦配列に
+    sd_now = scaler.fit_transform(df_now2gr)
+    df_sdnow = pd.DataFrame(sd_now, columns=['今期'], index=df_now2g.index)
+
+    #前期
+    df_last2gr = df_last2g.values.reshape(-1, 1) #.values忘れない #reshape(-1, 1)で縦配列に
+    sd_last = scaler.fit_transform(df_last2gr)
+    df_sdlast = pd.DataFrame(sd_last, columns=['前期'], index=df_last2g.index)
+
+    #merge
+    df_m = df_sdnow.merge(df_sdlast, left_index=True, right_index=True, how='left')
+    df_m = df_m.fillna(0)
+    df_m['差異'] = df_m['今期'] - df_m['前期']
+    df_m['比率'] = df_m['今期'] / df_m['前期']
+
+    #偏差値
+    item_list = ['上昇アイテム', '下降アイテム']
+    selected_item = st.selectbox(
+        'アイテム選択',
+        item_list,
+        key='il'
+    )
+
+    #数量が平均より少ないアイテムの削除
+    df_m2 = df_m[df_m['今期'] >= 0]
+
+    if selected_item == '上昇アイテム':
+        df_up = df_m2.sort_values(['今期', '比率'], ascending=False)
+        st.dataframe(df_up)
+    
+    elif selected_item == '下降アイテム':
+        df_down = df_m2.sort_values(['差異'], ascending=True)
+        st.dataframe(df_down)
+
+
+
+
+
+
+
 
 def ranking_series():
     # *** selectbox 商品分類2***
@@ -287,7 +343,8 @@ def main():
         '侭　サイズランキング': hts_width,
         '侭　天板面形状ランキング': hts_shape,
         '侭　天板面形状サイズランキング': hts_shapesize,
-        '侭　天板形状サイズランキング': hts_shapesize_nonedge
+        '侭　天板形状サイズランキング': hts_shapesize_nonedge,
+        'test':calc_deviation
           
     }
     selected_app_name = st.sidebar.selectbox(label='分析項目の選択',
