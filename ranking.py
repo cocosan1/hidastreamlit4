@@ -103,6 +103,7 @@ def calc_deviation():
     df_now2g = df_now2.groupby('品番')['数量'].sum()
     df_last2g = df_last2.groupby('品番')['数量'].sum()
 
+
     #標準化
     #今期
     scaler = StandardScaler()
@@ -131,14 +132,24 @@ def calc_deviation():
 
     #数量が平均より少ないアイテムの削除
     df_m2 = df_m[df_m['今期'] >= 0]
+    df_now2g2 = pd.DataFrame(df_now2g)
+ 
+    df_last2g2 = pd.DataFrame(df_last2g)
+
+    df_mval = df_now2g2.merge(df_last2g2, left_index=True, right_index=True, how='left')
+
 
     if selected_item == '上昇アイテム':
-        df_up = df_m2.sort_values(['今期', '比率'], ascending=False)
-        st.dataframe(df_up)
+        df_up = df_m2.sort_values(['比率', '今期'], ascending=False)
+   
+        df_upm = df_up.merge(df_mval, left_index=True, right_index=True, how='left')
+
+        st.dataframe(df_upm)
     
     elif selected_item == '下降アイテム':
         df_down = df_m2.sort_values(['差異'], ascending=True)
-        st.dataframe(df_down)
+        df_downm = df_down.merge(df_mval, left_index=True, right_index=True, how='left')
+        st.dataframe(df_downm)
 
 
 
