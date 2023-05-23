@@ -100,27 +100,54 @@ def calc_deviation():
     df_last2['数量'] = df_last2['数量'].fillna(0)
 
 
-    df_now2g = df_now2.groupby('品番')['数量'].sum()
-    df_last2g = df_last2.groupby('品番')['数量'].sum()
+    s_now2g = df_now2.groupby('品番')['数量'].sum()
+    s_last2g = df_last2.groupby('品番')['数量'].sum()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write('今期')
+        st.write(s_now2g)
+
+        #外れ値処理
+        under_now = st.number_input('下限指定', key='unn')
+        upper_now = st.number_input('上限指定', key='upn')
+
+        s_now2g = s_now2g[(s_now2g >= under_now) & (s_now2g <= upper_now)]
+        st.write(s_now2g)
+
+    with col2:
+        st.write('前期')
+        st.write(s_last2g)  
+
+        #外れ値処理
+        under_last = st.number_input('下限指定', key='unl')
+        upper_last = st.number_input('上限指定', key='upl')
+
+        s_last2g = s_last2g[(s_last2g >= under_last) & (s_last2g <= upper_last)]
+        st.write(s_last2g)
 
 
     #標準化
     #今期
     scaler = StandardScaler()
-    df_now2gr = df_now2g.values.reshape(-1, 1) #.values忘れない #reshape(-1, 1)で縦配列に
-    sd_now = scaler.fit_transform(df_now2gr)
-    df_sdnow = pd.DataFrame(sd_now, columns=['今期'], index=df_now2g.index)
+    s_now2gr = s_now2g.values.reshape(-1, 1) #.values忘れない #reshape(-1, 1)で縦配列に
+    sd_now = scaler.fit_transform(s_now2gr)
+    df_sdnow = pd.DataFrame(sd_now, columns=['今期'], index=s_now2g.index)
 
     #前期
-    df_last2gr = df_last2g.values.reshape(-1, 1) #.values忘れない #reshape(-1, 1)で縦配列に
-    sd_last = scaler.fit_transform(df_last2gr)
-    df_sdlast = pd.DataFrame(sd_last, columns=['前期'], index=df_last2g.index)
+    s_last2gr = s_last2g.values.reshape(-1, 1) #.values忘れない #reshape(-1, 1)で縦配列に
+    sd_last = scaler.fit_transform(s_last2gr)
+    df_sdlast = pd.DataFrame(sd_last, columns=['前期'], index=s_last2g.index)
 
     #merge
     df_m = df_sdnow.merge(df_sdlast, left_index=True, right_index=True, how='left')
     df_m = df_m.fillna(0)
-    df_m['差異'] = df_m['今期'] - df_m['前期']
-    df_m['比率'] = df_m['今期'] / df_m['前期']
+
+    df_m['dev今期'] = df_m['今期'].apply(lambda x: (x*10)+50)
+    df_m['dev前期'] = df_m['前期'].apply(lambda x: (x*10)+50)
+
+    df_m['差異'] = df_m['dev今期'] - df_m['dev前期']
+    df_m['比率'] = df_m['dev今期'] / df_m['dev前期']
 
     #偏差値
     item_list = ['上昇アイテム', '下降アイテム']
@@ -131,24 +158,30 @@ def calc_deviation():
     )
 
     #数量が平均より少ないアイテムの削除
-    df_m2 = df_m[df_m['今期'] >= 0]
-    df_now2g2 = pd.DataFrame(df_now2g)
- 
-    df_last2g2 = pd.DataFrame(df_last2g)
 
+    df_now2g2 = pd.DataFrame(s_now2g)
+    df_last2g2 = pd.DataFrame(s_last2g)
     df_mval = df_now2g2.merge(df_last2g2, left_index=True, right_index=True, how='left')
 
 
     if selected_item == '上昇アイテム':
-        df_up = df_m2.sort_values(['比率', '今期'], ascending=False)
-   
+        df_up = df_m.sort_values(['比率', 'dev今期'], ascending=False)
         df_upm = df_up.merge(df_mval, left_index=True, right_index=True, how='left')
+        df_upm.drop(['今期', '前期'], axis=1, inplace=True)
+        df_upm = df_upm.rename(columns={'数量_x': '今期/数量', '数量_y': '前期/数量'})
+        df_upm = df_upm[df_upm['比率'] >= 1]
+
 
         st.dataframe(df_upm)
     
     elif selected_item == '下降アイテム':
-        df_down = df_m2.sort_values(['差異'], ascending=True)
+        df_down = df_m.sort_values('dev今期', ascending=False)
+        df_down = df_m.sort_values('比率', ascending=True)
         df_downm = df_down.merge(df_mval, left_index=True, right_index=True, how='left')
+        df_downm.drop(['今期', '前期'], axis=1, inplace=True)
+        df_downm = df_downm.rename(columns={'数量_x': '今期/数量', '数量_y': '前期/数量'})
+        df_downm = df_downm[df_downm['比率'] <= 1]
+
         st.dataframe(df_downm)
 
 
