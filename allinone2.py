@@ -71,6 +71,11 @@ df_now = DataFrame()
 if uploaded_file_now:
     df_now = make_data_now(uploaded_file_now)
 
+    #データ範囲表示
+    date_start =df_now['受注日'].min()
+    date_end =df_now['受注日'].max()
+    st.sidebar.caption(f'{date_start} - {date_end}')
+
 else:
     st.info('今期のファイルを選択してください。')
 
@@ -80,10 +85,17 @@ uploaded_file_last = st.sidebar.file_uploader('前期', type='xlsx', key='last')
 df_last = DataFrame()
 if uploaded_file_last:
     df_last = make_data_last(uploaded_file_last)
+
+    #データ範囲表示
+    date_start =df_last['受注日'].min()
+    date_end =df_last['受注日'].max()
+    st.sidebar.caption(f'{date_start} - {date_end}')
     
 else:
     st.info('前期のファイルを選択してください。')
     st.stop()
+
+
 
 #グラフ生成クラス
 graph = Graph()

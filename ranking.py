@@ -18,7 +18,7 @@ st.markdown('#### 品番別分析')
 def make_data_now(file):
     df_now = pd.read_excel(
     file, sheet_name='受注委託移動在庫生産照会', \
-        usecols=[2, 8, 9, 10, 15, 31, 42, 50, 51]) #index　ナンバー不要　index_col=0
+        usecols=[2, 8, 9, 10, 15, 16, 31, 42, 50, 51]) #index　ナンバー不要　index_col=0
 
     df_now['得意先CD2'] = df_now['得意先CD'].map(lambda x:str(x)[0:5])
     df_now['商品コード2'] = df_now['商品コード'].map(lambda x: x.split()[0]) #品番
@@ -40,7 +40,7 @@ def make_data_now(file):
 def make_data_last(file):
     df_last = pd.read_excel(
     file, sheet_name='受注委託移動在庫生産照会', \
-        usecols=[2, 8, 9, 10, 15, 31, 42, 50, 51])
+        usecols=[2, 8, 9, 10, 15, 16, 31, 42, 50, 51])
     
     df_last['得意先CD2'] = df_last['得意先CD'].map(lambda x:str(x)[0:5])
     df_last['商品コード2'] = df_last['商品コード'].map(lambda x: x.split()[0]) #品番
@@ -63,6 +63,11 @@ df_now = DataFrame()
 if uploaded_file_now:
     df_now = make_data_now(uploaded_file_now)
 
+    #データ範囲表示
+    date_start =df_now['受注日'].min()
+    date_end =df_now['受注日'].max()
+    st.sidebar.caption(f'{date_start} - {date_end}')
+
 else:
     st.info('今期のファイルを選択してください。')
 
@@ -72,6 +77,11 @@ uploaded_file_last = st.sidebar.file_uploader('前期', type='xlsx', key='last')
 df_last = DataFrame()
 if uploaded_file_last:
     df_last = make_data_last(uploaded_file_last)
+
+    #データ範囲表示
+    date_start =df_last['受注日'].min()
+    date_end =df_last['受注日'].max()
+    st.sidebar.caption(f'{date_start} - {date_end}')
     
 else:
     st.info('前期のファイルを選択してください。')
@@ -84,6 +94,7 @@ df2 = df_now[df_now['商品分類名2'].isin(['ダイニングチェア', 'リ�
 graph = Graph()
 
 def calc_deviation():
+    st.markdown('### アイテム上昇・下降分析/偏差値')
     cate_list = ['リビングチェア', 'ダイニングチェア', 'ダイニングテーブル']
     selected_cate = st.selectbox(
         '商品分類',
@@ -109,22 +120,26 @@ def calc_deviation():
         st.write(s_now2g)
 
         #外れ値処理
+        st.write('外れ値処理')
         under_now = st.number_input('下限指定', key='unn')
         upper_now = st.number_input('上限指定', key='upn')
 
         s_now2g = s_now2g[(s_now2g >= under_now) & (s_now2g <= upper_now)]
-        st.write(s_now2g)
+        with st.expander('外れ値処理後', expanded=False):
+            st.write(s_now2g)
 
     with col2:
         st.write('前期')
         st.write(s_last2g)  
 
         #外れ値処理
+        st.write('外れ値処理')
         under_last = st.number_input('下限指定', key='unl')
         upper_last = st.number_input('上限指定', key='upl')
 
         s_last2g = s_last2g[(s_last2g >= under_last) & (s_last2g <= upper_last)]
-        st.write(s_last2g)
+        with st.expander('外れ値処理後', expanded=False):
+            st.write(s_last2g)
 
 
     #標準化
