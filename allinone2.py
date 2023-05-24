@@ -735,10 +735,7 @@ with tab1:
             
         }
         selected_app_name = st.selectbox(label='分析項目の選択',
-                                                options=list(apps.keys()), key='tab1')
-        link = '[home](https://cocosan1-hidastreamlit3-linkpage-j6o5p1.streamlit.app/)'
-        st.sidebar.markdown(link, unsafe_allow_html=True)
-        st.sidebar.caption('homeに戻る')                                       
+                                                options=list(apps.keys()), key='tab1')                                  
 
         # 選択されたアプリケーションを処理する関数を呼び出す
         render_func = apps[selected_app_name]

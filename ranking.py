@@ -199,13 +199,6 @@ def calc_deviation():
 
         st.dataframe(df_downm)
 
-
-
-
-
-
-
-
 def ranking_series():
     # *** selectbox 商品分類2***
     category = ['リビングチェア', 'ダイニングチェア']
@@ -277,8 +270,8 @@ def profit():
     hinban = st.text_input('品番を入力', 'SG261A')
     col1, col2 = st.columns(2)
     with col1:
-        kingaku_sum = df[df['商品コード2']==hinban]['金額'].sum()
-        genka_sum = df[df['商品コード2']==hinban]['原価金額'].sum()
+        kingaku_sum = df_now[df_now['商品コード2']==hinban]['金額'].sum()
+        genka_sum = df_now[df_now['商品コード2']==hinban]['原価金額'].sum()
         st.metric('粗利率', value=(f'{(kingaku_sum-genka_sum)/kingaku_sum*100:0.1f} %'))
     
     with col2:
@@ -287,7 +280,7 @@ def profit():
 
 
 def hts_width():
-    df_hts = df[df['商品コード2']=='HTS2']
+    df_hts = df_now[df_now['商品コード2']=='HTS2']
     size_list = df_hts['HTSサイズ'].unique() #張地だがサイズを拾える
 
     #strに型変換してグラフ作成時に順番が動かないようにする
@@ -327,7 +320,7 @@ def hts_width():
 
 
 def hts_shape():
-    df_hts = df[df['商品コード2']=='HTS2']
+    df_hts = df_now[df_now['商品コード2']=='HTS2']
     shape_list = df_hts['HTS形状'].unique()
 
     cnt_list = []
@@ -348,7 +341,7 @@ def hts_shape():
     graph.make_bar(df_shape2['数量'], df_shape2.index)
 
 def hts_shapesize():
-    df_hts = df[df['商品コード2']=='HTS2']
+    df_hts = df_now[df_now['商品コード2']=='HTS2']
     df_hts['形状サイズ'] = df_hts['HTS形状'] + df_hts['HTSサイズ']
     shapesize_list = df_hts['形状サイズ'].unique()
 
@@ -371,7 +364,7 @@ def hts_shapesize():
 
 
 def hts_shapesize_nonedge():
-    df_hts = df[df['商品コード2']=='HTS2']
+    df_hts = df_now[df_now['商品コード2']=='HTS2']
     df_hts['形状2サイズ'] = df_hts['HTS形状2'] + df_hts['HTSサイズ']
     shapesize_list = df_hts['形状2サイズ'].unique()
 
@@ -407,10 +400,7 @@ def main():
           
     }
     selected_app_name = st.sidebar.selectbox(label='分析項目の選択',
-                                             options=list(apps.keys()))
-    link = '[home](https://cocosan1-hidastreamlit4-linkpage-7tmz81.streamlit.app/)'
-    st.sidebar.markdown(link, unsafe_allow_html=True)
-    st.sidebar.caption('homeに戻る')                                       
+                                             options=list(apps.keys()))                                     
 
     if selected_app_name == '-':
         st.info('サイドバーから分析項目を選択してください')
@@ -419,6 +409,10 @@ def main():
     # 選択されたアプリケーションを処理する関数を呼び出す
     render_func = apps[selected_app_name]
     render_func()
+
+    link = '[home](https://cocosan1-hidastreamlit4-linkpage-7tmz81.streamlit.app/)'
+    st.sidebar.markdown(link, unsafe_allow_html=True)
+    st.sidebar.caption('homeに戻る') 
 
 if __name__ == '__main__':
     main()
