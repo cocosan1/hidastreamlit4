@@ -125,6 +125,7 @@ def calc_deviation():
         upper_now = st.number_input('上限指定', key='upn', value=100)
 
         s_now2g = s_now2g[(s_now2g >= under_now) & (s_now2g <= upper_now)]
+
         with st.expander('外れ値処理後', expanded=False):
             st.write(s_now2g)
 
@@ -185,9 +186,13 @@ def calc_deviation():
         df_upm.drop(['今期', '前期'], axis=1, inplace=True)
         df_upm = df_upm.rename(columns={'数量_x': '今期/数量', '数量_y': '前期/数量'})
         df_upm = df_upm[df_upm['比率'] >= 1]
+        #ソート
+        df_upm.sort_values('比率', ascending=True, inplace=True)
+        #可視化
+        graph.make_bar_h(df_upm['比率'], df_upm.index, '対前年比', '対前年比/偏差値/降順')
 
-
-        st.dataframe(df_upm)
+        with st.expander('一覧', expanded=False):
+            st.dataframe(df_upm)
     
     elif selected_item == '下降アイテム':
         df_down = df_m.sort_values('dev今期', ascending=False)
@@ -197,7 +202,14 @@ def calc_deviation():
         df_downm = df_downm.rename(columns={'数量_x': '今期/数量', '数量_y': '前期/数量'})
         df_downm = df_downm[df_downm['比率'] <= 1]
 
-        st.dataframe(df_downm)
+        #ソート
+        df_downm.sort_values('比率', ascending=False, inplace=True)
+        #可視化
+        graph.make_bar_h(df_downm['比率'], df_downm.index, '対前年比', '対前年比/偏差値/昇順')
+
+        with st.expander('一覧', expanded=False):
+            st.dataframe(df_downm)
+
 
 def ranking_series():
     # *** selectbox 商品分類2***
