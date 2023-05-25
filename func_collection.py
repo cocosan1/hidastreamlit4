@@ -71,9 +71,9 @@ class Graph():
             #plotly_chart plotlyを使ってグラグ描画　グラフの幅が列の幅
             st.plotly_chart(fig, use_container_width=True) 
         
-        #*************************************************************棒グラフ　横
+        #*************************************************************棒グラフ　横 基準線あり
          #可視化
-        def make_bar_h(self, val_list, label_list, name, title):
+        def make_bar_h(self, val_list, label_list, name, title, line_val, height):
             fig = go.Figure()
             fig.add_trace(go.Bar(
                 x=val_list,
@@ -84,14 +84,14 @@ class Graph():
                 )
             fig.update_traces(
                 textposition='outside',
-                texttemplate='%{x:0.2f}%',
+                texttemplate='%{x:0.2f}',
                 orientation='h'
                 )
             # 基準線の追加
             fig.add_shape(
                 type="line",
-                x0=1,  # 基準線の開始位置 (x座標)
-                x1=1,  # 基準線の終了位置 (x座標)
+                x0=line_val,  # 基準線の開始位置 (x座標)
+                x1=line_val,  # 基準線の終了位置 (x座標)
                 y0=label_list[0],  # 基準線の開始位置 (y座標)
                 y1=label_list[-1],  # 基準線の終了位置 (y座標)
                 line=dict(
@@ -103,7 +103,33 @@ class Graph():
             fig.update_layout(
                 title=title,
                 width=500,
-                height=2500,
+                height=height,
+                plot_bgcolor='white'
+                )
+            #plotly_chart plotlyを使ってグラグ描画　グラフの幅が列の幅
+            st.plotly_chart(fig, use_container_width=True) 
+        
+        #*************************************************************棒グラフ　横　基準線なし
+         #可視化
+        def make_bar_h_nonline(self, val_list, label_list, name, title, height):
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=val_list,
+                y=label_list,
+                marker_color='#87cefa',
+                textfont={'color': '#696969'},
+                name=name)
+                )
+            fig.update_traces(
+                textposition='outside',
+                texttemplate='%{x}',
+                orientation='h'
+                )
+
+            fig.update_layout(
+                title=title,
+                width=500,
+                height=height,
                 plot_bgcolor='white'
                 )
             #plotly_chart plotlyを使ってグラグ描画　グラフの幅が列の幅
@@ -135,7 +161,7 @@ class Graph():
             #plotly_chart plotlyを使ってグラグ描画　グラフの幅が列の幅
             st.plotly_chart(fig, use_container_width=True) 
         
-                #**********************************************折れ線　non_xlist    
+        #**********************************************折れ線　non_xlist    
         def make_line_nonXlist(self, df_list, name_list):
             #グラフを描くときの土台となるオブジェクト
             fig = go.Figure()

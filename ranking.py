@@ -94,6 +94,7 @@ df2 = df_now[df_now['商品分類名2'].isin(['ダイニングチェア', 'リ�
 graph = Graph()
 
 def calc_deviation():
+    #*******************************************上昇下降アイテムの抽出
     st.markdown('### アイテム上昇・下降分析/偏差値')
     cate_list = ['リビングチェア', 'ダイニングチェア', 'ダイニングテーブル']
     selected_cate = st.selectbox(
@@ -189,7 +190,7 @@ def calc_deviation():
         #ソート
         df_upm.sort_values('比率', ascending=True, inplace=True)
         #可視化
-        graph.make_bar_h(df_upm['比率'], df_upm.index, '対前年比', '対前年比/偏差値/降順')
+        graph.make_bar_h(df_upm['比率'], df_upm.index, '対前年比', '対前年比/偏差値/降順', 1, 2500)
 
         with st.expander('一覧', expanded=False):
             st.dataframe(df_upm)
@@ -205,10 +206,49 @@ def calc_deviation():
         #ソート
         df_downm.sort_values('比率', ascending=False, inplace=True)
         #可視化
-        graph.make_bar_h(df_downm['比率'], df_downm.index, '対前年比', '対前年比/偏差値/昇順')
+        graph.make_bar_h(df_downm['比率'], df_downm.index, '対前年比', '対前年比/偏差値/昇順', 2500)
 
         with st.expander('一覧', expanded=False):
             st.dataframe(df_downm)
+    
+    #*******************************************アイテムの深堀
+    #******************データの絞込み
+    st.markdown('#### 品番検索: 売れ筋組み合わせ 塗色／張地')
+
+    #品番検索
+    part_word = st.text_input(
+        '頭品番 例SN',
+        key='pw'
+    )
+
+    if part_word != '':
+
+        item_list = []
+        for item in df_now2['品番'].unique():
+            if part_word in item:
+                item_list.append(item)
+
+        selected_item = st.selectbox(
+            '品番',
+            item_list,
+            key='sl'
+        )
+        df_select = df_now2[df_now2['品番'] == selected_item]
+
+        #******************塗色分析
+        s_color = df_select.groupby('塗色CD')['数量'].sum()
+
+        s_color = s_color.sort_values(ascending=False)
+        graph.make_bar(s_color, s_color.index)
+
+        #******************塗色張地分析
+        s_item = df_select.groupby('商　品　名')['数量'].sum()
+
+        s_item = s_item.sort_values(ascending=True)
+        graph.make_bar_h_nonline(s_item, s_item.index, '数量', '売れ筋組み合わせ 塗色／張地', 800)
+
+        with st.expander('一覧', expanded=False):
+            st.dataframe(s_item)
 
 
 def ranking_series():
