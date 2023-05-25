@@ -121,8 +121,8 @@ def calc_deviation():
 
         #外れ値処理
         st.write('外れ値処理')
-        under_now = st.number_input('下限指定', key='unn')
-        upper_now = st.number_input('上限指定', key='upn')
+        under_now = st.number_input('下限指定', key='unn', value=0)
+        upper_now = st.number_input('上限指定', key='upn', value=100)
 
         s_now2g = s_now2g[(s_now2g >= under_now) & (s_now2g <= upper_now)]
         with st.expander('外れ値処理後', expanded=False):
@@ -134,8 +134,8 @@ def calc_deviation():
 
         #外れ値処理
         st.write('外れ値処理')
-        under_last = st.number_input('下限指定', key='unl')
-        upper_last = st.number_input('上限指定', key='upl')
+        under_last = st.number_input('下限指定', key='unl', value=0)
+        upper_last = st.number_input('上限指定', key='upl', value=100)
 
         s_last2g = s_last2g[(s_last2g >= under_last) & (s_last2g <= upper_last)]
         with st.expander('外れ値処理後', expanded=False):
