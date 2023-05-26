@@ -96,29 +96,65 @@ graph = Graph()
 def calc_deviation():
     #*******************************************上昇下降アイテムの抽出
     st.markdown('### アイテム上昇・下降分析/偏差値')
+
     cate_list = ['リビングチェア', 'ダイニングチェア', 'ダイニングテーブル']
     selected_cate = st.selectbox(
         '商品分類',
         cate_list,
         key='cl'
     )
-    df_now2 = df_now[df_now['商品分類名2']==selected_cate]
-    df_last2 = df_last[df_last['商品分類名2']==selected_cate]
+    if selected_cate == 'リビングチェア':
+        df_now2 = df_now[(df_now['商　品　名'].str.contains('ｿﾌｧ1P')) | 
+                         (df_now['商　品　名'].str.contains('ｿﾌｧ2P')) |
+                         (df_now['商　品　名'].str.contains('ｿﾌｧ2.5P')) | 
+                         (df_now['商　品　名'].str.contains('ｿﾌｧ3P')) 
+                         ] 
+        
+        df_last2 = df_last[(df_last['商　品　名'].str.contains('ｿﾌｧ1P')) | 
+                           (df_last['商　品　名'].str.contains('ｿﾌｧ2P')) |
+                           (df_last['商　品　名'].str.contains('ｿﾌｧ2.5P')) | 
+                           (df_last['商　品　名'].str.contains('ｿﾌｧ3P')) 
+                           ] 
+            
 
-    df_now2['品番'] = df_now2['商　品　名'].apply(lambda x: x.split(' ')[0])
-    df_last2['品番'] = df_last2['商　品　名'].apply(lambda x: x.split(' ')[0])
+        df_now2['品番'] = df_now2['商　品　名'].apply(lambda x: x.split(' ')[0])
+        df_last2['品番'] = df_last2['商　品　名'].apply(lambda x: x.split(' ')[0])
 
-    df_now2['数量'] = df_now2['数量'].fillna(0)
-    df_last2['数量'] = df_last2['数量'].fillna(0)
+        df_now2['数量'] = df_now2['数量'].fillna(0)
+        df_last2['数量'] = df_last2['数量'].fillna(0)
+
+        s_now2g = df_now2.groupby('品番')['数量'].sum()
+        s_last2g = df_last2.groupby('品番')['数量'].sum()
+    
+    else:
+        df_now2 = df_now[df_now['商品分類名2']==selected_cate]
+        df_last2 = df_last[df_last['商品分類名2']==selected_cate]
+
+        df_now2['品番'] = df_now2['商　品　名'].apply(lambda x: x.split(' ')[0])
+        df_last2['品番'] = df_last2['商　品　名'].apply(lambda x: x.split(' ')[0])
+
+        df_now2['数量'] = df_now2['数量'].fillna(0)
+        df_last2['数量'] = df_last2['数量'].fillna(0)
 
 
-    s_now2g = df_now2.groupby('品番')['数量'].sum()
-    s_last2g = df_last2.groupby('品番')['数量'].sum()
+        s_now2g = df_now2.groupby('品番')['数量'].sum()
+        s_last2g = df_last2.groupby('品番')['数量'].sum()
+    
+    st.write(f'【今期数量】{s_now2g.sum()} 【前期数量】{s_last2g.sum()} \
+             【対前年比】{s_now2g.sum() / s_last2g.sum():.2f}')
 
     col1, col2 = st.columns(2)
     with col1:
-        st.write('今期')
-        st.write(s_now2g)
+        st.write('今期 Top30')
+        #上位30取り出し
+        s_temp_now = s_now2g.sort_values(ascending=False)
+        s_temp_now = s_temp_now[0:30]
+        #並べ替え
+        s_temp_now.sort_values(ascending=True, inplace=True)
+        graph.make_bar_h_nonline(s_temp_now, s_temp_now.index, '今期', '今期/数量', 700)
+        
+        with st.expander('一覧', expanded=False):
+            st.dataframe(s_now2g)
 
         #外れ値処理
         st.write('外れ値処理')
@@ -131,8 +167,16 @@ def calc_deviation():
             st.write(s_now2g)
 
     with col2:
-        st.write('前期')
-        st.write(s_last2g)  
+        st.write('前期 Top30')
+        #上位30取り出し
+        s_temp_last = s_last2g.sort_values(ascending=False)
+        s_temp_last = s_temp_last[0:30]
+        #並べ替え
+        s_temp_last.sort_values(ascending=True, inplace=True)
+        graph.make_bar_h_nonline(s_temp_last, s_temp_last.index, '前期', '前期/数量', 700)
+        
+        with st.expander('一覧', expanded=False):
+            st.dataframe(s_last2g) 
 
         #外れ値処理
         st.write('外れ値処理')
@@ -186,11 +230,11 @@ def calc_deviation():
         df_upm = df_up.merge(df_mval, left_index=True, right_index=True, how='left')
         df_upm.drop(['今期', '前期'], axis=1, inplace=True)
         df_upm = df_upm.rename(columns={'数量_x': '今期/数量', '数量_y': '前期/数量'})
-        df_upm = df_upm[df_upm['比率'] >= 1]
+        df_upm = df_upm[df_upm['比率'] >= 1.05]
         #ソート
         df_upm.sort_values('比率', ascending=True, inplace=True)
         #可視化
-        graph.make_bar_h(df_upm['比率'], df_upm.index, '対前年比', '対前年比/偏差値/降順', 1, 2500)
+        graph.make_bar_h(df_upm['比率'], df_upm.index, '対前年比', '対前年比/偏差値/降順', 1, 1000)
 
         with st.expander('一覧', expanded=False):
             st.dataframe(df_upm)
@@ -201,12 +245,12 @@ def calc_deviation():
         df_downm = df_down.merge(df_mval, left_index=True, right_index=True, how='left')
         df_downm.drop(['今期', '前期'], axis=1, inplace=True)
         df_downm = df_downm.rename(columns={'数量_x': '今期/数量', '数量_y': '前期/数量'})
-        df_downm = df_downm[df_downm['比率'] <= 1]
+        df_downm = df_downm[df_downm['比率'] <= 0.95]
 
         #ソート
         df_downm.sort_values('比率', ascending=False, inplace=True)
         #可視化
-        graph.make_bar_h(df_downm['比率'], df_downm.index, '対前年比', '対前年比/偏差値/昇順', 2500)
+        graph.make_bar_h(df_downm['比率'], df_downm.index, '対前年比', '対前年比/偏差値/昇順', 1, 1000)
 
         with st.expander('一覧', expanded=False):
             st.dataframe(df_downm)
@@ -236,6 +280,7 @@ def calc_deviation():
         df_select = df_now2[df_now2['品番'] == selected_item]
 
         #******************塗色分析
+        st.write('塗色別数量')
         s_color = df_select.groupby('塗色CD')['数量'].sum()
 
         s_color = s_color.sort_values(ascending=False)
@@ -249,6 +294,12 @@ def calc_deviation():
 
         with st.expander('一覧', expanded=False):
             st.dataframe(s_item)
+        
+        #アソシエーション分析へのリンク
+        st.markdown('#### 同時に買われているアイテムを見る')
+        link = '[アソシエーション分析](https://cocosan1-association-fullhinban-cmy4cf.streamlit.app/)'
+        st.markdown(link, unsafe_allow_html=True)
+
 
 
 def ranking_series():
