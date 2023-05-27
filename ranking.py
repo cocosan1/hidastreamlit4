@@ -18,21 +18,21 @@ st.markdown('## 品番別分析')
 def make_data_now(file):
     df_now = pd.read_excel(
     file, sheet_name='受注委託移動在庫生産照会', \
-        usecols=[2, 3, 8, 9, 10, 15, 16, 31, 42, 46, 50, 51]) #index　ナンバー不要　index_col=0
+        usecols=[1,2, 3, 8, 9, 10, 15, 16, 31, 42, 46, 50, 51]) #index　ナンバー不要　index_col=0
 
-    df_now['得意先CD2'] = df_now['得意先CD'].map(lambda x:str(x)[0:5])
-    df_now['商品コード2'] = df_now['商品コード'].map(lambda x: x.split()[0]) #品番
+    df_now['伝票番号2'] = df_now['伝票番号'].apply(lambda x: x[:8])
+    df_now['得意先CD2'] = df_now['得意先CD'].apply(lambda x:str(x)[0:5])
+    df_now['商品コード2'] = df_now['商品コード'].apply(lambda x: x.split()[0]) #品番
 
 
-    df_now['張地'] = df_now['商　品　名'].map(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
-    df_now['HTSサイズ'] = df_now['張地'].map(lambda x: x.split('x')[0]) #HTSサイズ
-    df_now['HTS形状'] = df_now['商　品　名'].map(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
-    df_now['HTS形状2'] = df_now['HTS形状'].map(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
+    df_now['張地'] = df_now['商　品　名'].apply(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
+    df_now['HTSサイズ'] = df_now['張地'].apply(lambda x: x.split('x')[0]) #HTSサイズ
+    df_now['HTS形状'] = df_now['商　品　名'].apply(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
+    df_now['HTS形状2'] = df_now['HTS形状'].apply(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
 
     # ***INT型への変更***
     df_now[['数量', '金額', '原価金額']] = df_now[['数量', '金額', '原価金額']].fillna(0).astype('int64')
     #fillna　０で空欄を埋める
-
 
     return df_now
 
@@ -40,15 +40,16 @@ def make_data_now(file):
 def make_data_last(file):
     df_last = pd.read_excel(
     file, sheet_name='受注委託移動在庫生産照会', \
-        usecols=[2, 3, 8, 9, 10, 15, 16, 31, 42, 46, 50, 51])
+        usecols=[1, 2, 3, 8, 9, 10, 15, 16, 31, 42, 46, 50, 51])
     
-    df_last['得意先CD2'] = df_last['得意先CD'].map(lambda x:str(x)[0:5])
-    df_last['商品コード2'] = df_last['商品コード'].map(lambda x: x.split()[0]) #品番
+    df_last['伝票番号2'] = df_last['伝票番号'].apply(lambda x: x[:8])
+    df_last['得意先CD2'] = df_last['得意先CD'].apply(lambda x:str(x)[0:5])
+    df_last['商品コード2'] = df_last['商品コード'].apply(lambda x: x.split()[0]) #品番
 
-    df_last['張地'] = df_last['商　品　名'].map(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
-    df_last['HTSサイズ'] = df_last['張地'].map(lambda x: x.split('x')[0]) #HTSサイズ
-    df_last['HTS形状'] = df_last['商　品　名'].map(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
-    df_last['HTS形状2'] = df_last['HTS形状'].map(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
+    df_last['張地'] = df_last['商　品　名'].apply(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
+    df_last['HTSサイズ'] = df_last['張地'].apply(lambda x: x.split('x')[0]) #HTSサイズ
+    df_last['HTS形状'] = df_last['商　品　名'].apply(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
+    df_last['HTS形状2'] = df_last['HTS形状'].apply(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
 
     # ***INT型への変更***
     df_last[['数量', '金額', '原価金額']] = df_last[['数量', '金額', '原価金額']].fillna(0).astype('int64')
@@ -299,7 +300,9 @@ def calc_deviation():
         s_fab = df_color.groupby('張地')['数量'].sum()
 
         s_fab = s_fab.sort_values(ascending=True)
-        graph.make_bar_h_nonline(s_fab, s_fab.index, '数量', '張地/数量順', 800)
+
+        with st.expander('張地グラフ', expanded=False):
+            graph.make_bar_h_nonline(s_fab, s_fab.index, '数量', '張地/数量順', 800)
 
         #******************塗色張地分析
         s_item = df_select.groupby('商　品　名')['数量'].sum()
@@ -349,13 +352,21 @@ def calc_deviation():
 
         with st.expander('選択した得意先の明細を見る: 組み合わせ 塗色／張地', expanded=False):
             graph.make_bar_h_nonline(s_cust, s_cust.index, '数量', '組み合わせ 塗色／張地', 500)
+            st.dataframe(df_cust2)
 
-        
-
-        
         
         #アソシエーション分析へのリンク
         st.markdown('#### 同時に買われているアイテムを見る')
+        df_concat = pd.DataFrame()
+        for num in df_cust2['伝票番号2']:
+            df = df_now[df_now['伝票番号2'] == num]
+            df_concat = pd.concat([df_concat, df], join='outer')
+        
+        with st.expander('明細', expanded=False):
+            col_list = ['得意先名', '商　品　名', '数量', '伝票番号2']
+            st.table(df_concat[col_list])
+
+
         link = '[アソシエーション分析](https://cocosan1-association-fullhinban-cmy4cf.streamlit.app/)'
         st.markdown(link, unsafe_allow_html=True)
 
