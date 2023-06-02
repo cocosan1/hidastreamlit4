@@ -7,21 +7,6 @@ st.markdown('#### link page 星川')
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    img_megane = Image.open('img/虫眼鏡のアイコン.jpg')
-    st.image(img_megane, width=50)
-    st.markdown('###### 自動化')
-
-    link = '[市況情報/南東北](https://cocosan1-market-condition-main-lxvbyd.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
-
-    link = '[shop/来店者管理](https://cocosan1-kurax-py-gs-linkpage-rxa5f5.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
-
-    link = '[shop/成約予測メモ](https://cocosan1-shop-pred-calc-week-4dwsso.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
-
-
-with col2:
     img_megane = Image.open('img//電卓アイコン.jpg')
     st.image(img_megane, width=50)
     st.markdown('###### 分析/星川')
@@ -47,14 +32,36 @@ with col2:
     link = '[★売上分析/TIF東北](https://cocosan1-hidastreamlit-kh-tif-tohoku-dz7bgt.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+
+with col2:
+    img_megane = Image.open('img//電卓アイコン.jpg')
+    st.image(img_megane, width=50)
+    st.markdown('###### 第２世代')
     link = '[★展示分析&レコメンド](https://cocosan1-recommend-series2-main-7r9cjj.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★回転数/店舗](https://cocosan1-recommend-series2-calc-from-cust-fdp384.streamlit.app/)'
+    link = '[★回転数/店舗](https://cocosan1-recommend-series2-calc-jbt3a7.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[★アソシエーション](https://cocosan1-association-fullhinban-cmy4cf.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
+    
+
+with col3:
+    img_megane = Image.open('img/虫眼鏡のアイコン.jpg')
+    st.image(img_megane, width=50)
+    st.markdown('###### その他')
+
+    link = '[市況情報/南東北](https://cocosan1-market-condition-main-lxvbyd.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[shop/来店者管理](https://cocosan1-kurax-py-gs-linkpage-rxa5f5.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[shop/売上予測](https://cocosan1-shop-pred-calc-week-4dwsso.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+    
+
 
 
 
