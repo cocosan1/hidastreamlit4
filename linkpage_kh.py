@@ -50,6 +50,9 @@ with col2:
     link = '[★展示分析&レコメンド](https://cocosan1-recommend-series2-main-7r9cjj.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[★回転数/店舗](https://cocosan1-recommend-series2-calc-from-cust-fdp384.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
     link = '[★アソシエーション](https://cocosan1-association-fullhinban-cmy4cf.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
