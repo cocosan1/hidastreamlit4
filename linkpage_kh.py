@@ -23,7 +23,7 @@ with col1:
     link = '[★売上分析/得意先（個別）](https://cocosan1-hidastreamlit-kh-customer2-owoyjs.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★売上分析/年齢層](https://cocosan1-hidastreamlit-kh-customer-age-z8cejf.streamlit.app/)'
+    link = '[★売上分析/年齢層](https://cocosan1-hidastreamlit-kh-age-3wf4ye.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[★売上分析/エリア](https://cocosan1-hidastreamlit-kh-area-kh-hiqyx6.streamlit.app/)'
