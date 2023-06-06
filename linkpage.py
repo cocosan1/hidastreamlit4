@@ -21,6 +21,8 @@ with col1:
         st.caption('前期のデータは通年')
         st.write('■ 売上分析/品番別傾向')
         st.caption('品番別の傾向分析')
+        st.write('■ ハウス催事集計')
+        st.caption('催事で入力した見積もりの集計')
         st.write('■ 月次レポート出力')
         st.caption('得意先との打ち合わせ用レポートの自動作成、出力')
 
@@ -31,6 +33,9 @@ with col1:
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[売上分析/品番別傾向](https://cocosan1-hidastreamlit4-ranking-80xwnl.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[ハウス催事集計](https://cocosan1-house-main-7e68g1.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[月次レポート出力](https://cocosan1-hidastreamlit4-report2-i9oc7w.streamlit.app/)'
