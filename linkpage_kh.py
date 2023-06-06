@@ -60,6 +60,8 @@ with col3:
 
     link = '[shop/売上予測](https://cocosan1-shop-pred-calc-week-4dwsso.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
+
+    
     
 
 

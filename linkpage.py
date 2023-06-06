@@ -70,6 +70,8 @@ with col2:
         st.caption('廃番品の特定から見積まで')
         st.write('■ 市況状況/全国')
         st.caption('市況情報の取得　※情報は常に最新/着工数は市単位での検索可')
+        st.write('■ PDF結合/ハウス')
+        st.caption('ハウス　御見積書と明細書の結合/ファイル名はお客様名_見積NOにて作成')
 
     link = '[納期カレンダー作成](https://cocosan1-hidacalender2-calender-m3rc3o.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
@@ -78,4 +80,7 @@ with col2:
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[市況状況/全国](https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[PDF結合/ハウス](https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
