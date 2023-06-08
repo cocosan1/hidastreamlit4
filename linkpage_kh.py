@@ -11,25 +11,25 @@ with col1:
     st.image(img_megane, width=50)
     st.markdown('###### 分析/星川')
 
-    link = '[★本日の受注](https://cocosan1-hida-gcp-today-ofag3x.streamlit.app/)'
+    link = '[本日の受注](https://cocosan1-hida-gcp-today-ofag3x.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★売上分析/全体](https://cocosan1-hidastreamlit-kh-sales-kh2-hj7n9o.streamlit.app/)'
+    link = '[売上分析/全体](https://cocosan1-hidastreamlit-kh-sales-kh2-hj7n9o.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★売上分析/得意先別](https://cocosan1-hidastreamlit-kh-sales-cust-kh-x9a9mf.streamlit.app/)'
+    link = '[売上分析/得意先別](https://cocosan1-hidastreamlit-kh-sales-cust-kh-x9a9mf.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★売上分析/得意先（個別）](https://cocosan1-hidastreamlit-kh-customer2-owoyjs.streamlit.app/)'
+    link = '[売上分析/得意先（個別）](https://cocosan1-hidastreamlit-kh-customer2-owoyjs.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★売上分析/年齢層](https://cocosan1-hidastreamlit-kh-age-3wf4ye.streamlit.app/)'
+    link = '[売上分析/年齢層](https://cocosan1-hidastreamlit-kh-age-3wf4ye.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★売上分析/エリア](https://cocosan1-hidastreamlit-kh-area-kh-hiqyx6.streamlit.app/)'
+    link = '[売上分析/エリア](https://cocosan1-hidastreamlit-kh-area-kh-hiqyx6.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★売上分析/TIF東北](https://cocosan1-hidastreamlit-kh-tif-tohoku-dz7bgt.streamlit.app/)'
+    link = '[売上分析/TIF東北](https://cocosan1-hidastreamlit-kh-tif-tohoku-dz7bgt.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
 
@@ -37,13 +37,13 @@ with col2:
     img_megane = Image.open('img//電卓アイコン.jpg')
     st.image(img_megane, width=50)
     st.markdown('###### 第２世代')
-    link = '[★展示分析&レコメンド](https://cocosan1-recommend-series2-main-7r9cjj.streamlit.app/)'
+    link = '[展示分析&レコメンド](https://cocosan1-recommend-series2-main-7r9cjj.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★回転数/店舗](https://cocosan1-recommend-series2-calc-jbt3a7.streamlit.app/)'
+    link = '[分析2](https://cocosan1-recommend-series2-calc-jbt3a7.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[★アソシエーション](https://cocosan1-association-fullhinban-cmy4cf.streamlit.app/)'
+    link = '[アソシエーション](https://cocosan1-association-fullhinban-cmy4cf.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
     
 
