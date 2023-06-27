@@ -61,7 +61,7 @@ with col3:
     link = '[shop/来店者管理](https://cocosan1-kurax-py-gs-linkpage-rxa5f5.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[shop/売上予測](https://cocosan1-shop-pred-calc-week-4dwsso.streamlit.app/)'
+    link = '[shop/売上予測](https://shoppred-calkweek.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     
