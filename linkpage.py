@@ -73,7 +73,7 @@ with col2:
         st.write('■ PDF結合/ハウス')
         st.caption('ハウス　御見積書と明細書の結合/ファイル名はお客様名_見積NOにて作成')
 
-    link = '[納期カレンダー作成](https://hidacalender2-scalender.streamlit.app/)'
+    link = '[納期カレンダー作成](https://hidacalender3-calender.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[廃番品の特定、見積](https://cocosan1-repair-app-main-8jf8bl.streamlit.app/)'
