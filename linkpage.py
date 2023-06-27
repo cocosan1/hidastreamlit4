@@ -32,7 +32,7 @@ with col1:
     link = '[売上分析/前年通年](https://cocosan1-hidastreamlit4-allinone-allyear-u99utd.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[売上分析/品番別傾向](https://cocosan1-hidastreamlit4-ranking-80xwnl.streamlit.app/)'
+    link = '[売上分析/品番別傾向](https://hidaapp4-ranking.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[ハウス催事集計](https://cocosan1-house-main-7e68g1.streamlit.app/)'
@@ -76,7 +76,7 @@ with col2:
     link = '[納期カレンダー作成](https://hidacalender3-calender.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[廃番品の特定、見積](https://cocosan1-repair-app-main-8jf8bl.streamlit.app/)'
+    link = '[廃番品の特定、見積](https://repairapp-main.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[市況状況/全国](https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/)'
