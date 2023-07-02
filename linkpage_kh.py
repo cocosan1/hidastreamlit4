@@ -64,6 +64,9 @@ with col3:
     link = '[shop/売上予測](https://shoppred-calkweek.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[Q＆A](https://chatgpt-maintxt2.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
     
     
 
