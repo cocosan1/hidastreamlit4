@@ -32,6 +32,9 @@ with col1:
     link = '[売上分析/TIF東北](https://cocosan1-hidastreamlit-kh-tif-tohoku-dz7bgt.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[売上分析/pandasai](https://pandasai-main.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
 
 with col2:
     img_megane = Image.open('img//電卓アイコン.jpg')
