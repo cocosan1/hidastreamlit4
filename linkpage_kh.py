@@ -73,6 +73,9 @@ with col3:
     link = '[Q＆A: 社内](https://chatgpthidaapp-main.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[search file](https://searchfile-main.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
     
     
 
