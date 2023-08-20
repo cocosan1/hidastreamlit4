@@ -76,7 +76,7 @@ with col3:
     link = '[search file](https://searchfile-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[問い合わせ番号](https://llamaindexocr-main.streamlit.app/)'
+    link = '[問い合わせ番号](https://llamaindexocr-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     
