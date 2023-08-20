@@ -84,3 +84,6 @@ with col2:
 
     link = '[PDF結合/ハウス](https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
+
+    link = '[配送問い合わせ番号](https://llamaindexocr-main.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
