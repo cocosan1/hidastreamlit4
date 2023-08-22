@@ -79,6 +79,9 @@ with col3:
     link = '[問い合わせ番号](https://llamaindexocr-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[YOUTUBE 要約](https://llamayoutube-app.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
     
     
 
