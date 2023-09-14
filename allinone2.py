@@ -1816,8 +1816,8 @@ with tab5:
 
     df_now2 = df_now.copy()
     df_last2 = df_last.copy()
-    df_now2['得意先名'] = df_now['得意先名'].fillna('nan')
-    df_last2['得意先名'] = df_last['得意先名'].fillna('nan')
+    df_now2['得意先名'] = df_now2['得意先名'].fillna('nan')
+    df_last2['得意先名'] = df_last2['得意先名'].fillna('nan')
     df_now2 = df_now2[df_now2['得意先名'].str.contains('㈱東京ｲﾝﾃﾘｱ')]
     df_last2 = df_last2[df_last2['得意先名'].str.contains('㈱東京ｲﾝﾃﾘｱ')]
 
@@ -1836,6 +1836,55 @@ with tab5:
 
     def none5():
         st.info('分析項目を選択してください')
+    
+    def all_data():
+        customer_list = df_now2['得意先名'].unique()
+
+        index = []
+        total_now = []
+        total_last = []
+        total_rate = []
+        original_now = []
+        original_last = []
+        original_rate_now = []
+        original_rate_last = []
+        original_rate__diff = []
+
+        for customer in customer_list:
+            index.append(customer)
+            df_now_cust = df_now2[df_now2['得意先名']==customer]
+            df_last_cust = df_last2[df_last2['得意先名']==customer]
+
+            total_sum_now = df_now_cust['金額'].sum()
+            total_sum_last = df_last_cust['金額'].sum()
+            total_sum_rate = round(total_sum_now / total_sum_last, 2) 
+   
+
+            cust_total_now = df_now_cust['金額'].sum()
+            cust_total_last = df_last_cust['金額'].sum()
+            original_now_culc = df_now_cust[df_now_cust['シリーズ名'].isin(['森の記憶', 'LEVITA (ﾚｳﾞｨﾀ)', '悠々', 'とき葉', '青葉', '東京ｲﾝﾃﾘｱｵﾘｼﾞﾅﾙ'])]['金額'].sum()
+            original_last_culc = df_last_cust[df_last_cust['シリーズ名'].isin(['森の記憶', 'LEVITA (ﾚｳﾞｨﾀ)', '悠々', 'とき葉', '青葉', '東京ｲﾝﾃﾘｱｵﾘｼﾞﾅﾙ'])]['金額'].sum()
+            original_rate_now_culc = round(original_now_culc / cust_total_now,2)
+            original_rate_last_culc = round(original_last_culc / cust_total_last,2)
+            original_rate_diff_culc = (original_now_culc / cust_total_now) - (original_last_culc / cust_total_last)
+
+            total_now.append(total_sum_now)
+            total_last.append(total_sum_last)
+            total_rate.append(total_sum_rate)
+            original_now.append(original_now_culc)
+            original_last.append(original_last_culc)
+            original_rate_now.append(original_rate_now_culc)
+            original_rate_last.append(original_rate_last_culc)
+            original_rate__diff.append(original_rate_diff_culc)
+            
+        original_rate_list = pd.DataFrame(list(zip(total_now, total_last, total_rate, original_now, original_last, \
+                                                   original_rate_now, original_rate_last, original_rate__diff)), \
+                                                    index=index, columns=[\
+                                                        '今期売上', '前期売上', '対前年比',\
+                                                        '今期O売上', '前期O売上', '今期O比率', '前期O比率', 'O対前年差'])
+  
+        st.dataframe(original_rate_list)
+
 
     def original_ratio():
         now_original_sum = df_now2[df_now2['シリーズ名'].isin(['森の記憶', 'LEVITA (ﾚｳﾞｨﾀ)', '悠々', 'とき葉', '青葉', '東京ｲﾝﾃﾘｱｵﾘｼﾞﾅﾙ'])]['金額'].sum()
@@ -2548,6 +2597,7 @@ with tab5:
         # アプリケーション名と対応する関数のマッピング
         apps = {
             '-': none5,
+            '店毎売上(トータル/オリジナル)': all_data,
             'オリ比率（全体）●': original_ratio,
             'オリ比率（ダイニング）●': original_ratio_d,
             'オリ比率（リビング）●': original_ratio_l,
