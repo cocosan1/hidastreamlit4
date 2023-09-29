@@ -14,7 +14,10 @@ with col1:
     link = '[本日の受注](https://cocosan1-hida-gcp-today-ofag3x.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[売上分析/全体](https://cocosan1-hidastreamlit-kh-sales-kh2-hj7n9o.streamlit.app/)'
+    link = '[売上分析/全体80期](https://cocosan1-hidastreamlit-kh-sales-kh2-hj7n9o.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[売上分析/全体81期](https://hidaappkh-sales-kh81.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[売上分析/得意先別](https://cocosan1-hidastreamlit-kh-sales-cust-kh-x9a9mf.streamlit.app/)'
