@@ -57,6 +57,9 @@ with col2:
 
     link = '[得意先分析2](https://recommend-series2-cust.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
+
+    link = '[アイテム別売上予測](https://recommendseries2-pred-itemsales.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
     
 
 with col3:
