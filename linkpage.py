@@ -26,20 +26,26 @@ with col1:
         st.write('■ 月次レポート出力')
         st.caption('得意先との打ち合わせ用レポートの自動作成、出力')
 
-    link = '[売上分析](https://cocosan1-hidastreamlit4-allinone2-jv1drl.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    st.link_button('売上分析', 'https://cocosan1-hidastreamlit4-allinone2-jv1drl.streamlit.app/')
+    st.link_button('売上分析/前年通年', 'https://cocosan1-hidastreamlit4-allinone-allyear-u99utd.streamlit.app/')
+    st.link_button('売上分析/品番別傾向', 'https://hidaapp4-ranking.streamlit.app/')
+    st.link_button('ハウス催事集計', 'https://cocosan1-house-main-7e68g1.streamlit.app/')
+    st.link_button('月次レポート出力', 'https://cocosan1-hidastreamlit4-report2-i9oc7w.streamlit.app/')
 
-    link = '[売上分析/前年通年](https://cocosan1-hidastreamlit4-allinone-allyear-u99utd.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    # link = '[売上分析](https://cocosan1-hidastreamlit4-allinone2-jv1drl.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
 
-    link = '[売上分析/品番別傾向](https://hidaapp4-ranking.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    # link = '[売上分析/前年通年](https://cocosan1-hidastreamlit4-allinone-allyear-u99utd.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
 
-    link = '[ハウス催事集計](https://cocosan1-house-main-7e68g1.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    # link = '[売上分析/品番別傾向](https://hidaapp4-ranking.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
 
-    link = '[月次レポート出力](https://cocosan1-hidastreamlit4-report2-i9oc7w.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    # link = '[ハウス催事集計](https://cocosan1-house-main-7e68g1.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
+
+    # link = '[月次レポート出力](https://cocosan1-hidastreamlit4-report2-i9oc7w.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
 
     #目標入力フォームdownload
     st.image('download.png', width=30)
@@ -73,15 +79,20 @@ with col2:
         st.write('■ PDF結合/ハウス')
         st.caption('ハウス　御見積書と明細書の結合/ファイル名はお客様名_見積NOにて作成')
 
+    st.link_button('納期カレンダー作成', 'https://hidacalender3-calender.streamlit.app/')
+    st.link_button('廃番品の特定、見積', 'https://repairapp-main.streamlit.app/')
+    st.link_button('市況状況/全国', 'https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/')
+    st.link_button('PDF結合/ハウス', 'https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/')
 
-    link = '[納期カレンダー作成](https://hidacalender3-calender.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
 
-    link = '[廃番品の特定、見積](https://repairapp-main.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    # link = '[納期カレンダー作成](https://hidacalender3-calender.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
 
-    link = '[市況状況/全国](https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    # link = '[廃番品の特定、見積](https://repairapp-main.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
 
-    link = '[PDF結合/ハウス](https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/)'
-    st.markdown(link, unsafe_allow_html=True)
+    # link = '[市況状況/全国](https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
+
+    # link = '[PDF結合/ハウス](https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/)'
+    # st.markdown(link, unsafe_allow_html=True)
