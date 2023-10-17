@@ -416,11 +416,20 @@ with tab1:
             kokusanzai_now2 = df_now[df_now['商品コード2'].isin(['SG261M', 'SG261K', 'SG261C', 'SG261AM', 'SG261AK', 'SG261AC', 'KD201M', 'KD201K', 'KD201C', 'KD201AM', 'KD201AK', 'KD201AC'])]['金額'].sum()
             kokusanzai_last2 = df_last[df_last['商品コード2'].isin(['SG261M', 'SG261K', 'SG261C', 'SG261AM', 'SG261AK', 'SG261AC', 'KD201M', 'KD201K', 'KD201C', 'KD201AM', 'KD201AK', 'KD201AC'])]['金額'].sum()
             
+            
+
             kokusanzai_now3 = df_now[df_now['商品コード3']=='HJ']['金額'].sum()
             kokusanzai_last3 = df_last[df_last['商品コード3']=='HJ']['金額'].sum()
 
             kokusanzai_now_t = kokusanzai_now1 + kokusanzai_now2 + kokusanzai_now3
             kokusanzai_last_t = kokusanzai_last1 + kokusanzai_last2 + kokusanzai_last3 
+
+            with st.expander('国産材: 今期', expanded=False):
+                df_now1 = df_now[df_now['シリーズ名'].isin(['北海道民芸家具', 'HIDA', 'Northern Forest', '北海道HMその他', '杉座', 'ｿﾌｨｵ SUGI', '風のうた', 'Kinoe', 'SUWARI', 'KURINOKI'])]
+                df_now2 =df_now[df_now['商品コード2'].isin(['SG261M', 'SG261K', 'SG261C', 'SG261AM', 'SG261AK', 'SG261AC', 'KD201M', 'KD201K', 'KD201C', 'KD201AM', 'KD201AK', 'KD201AC'])]
+                df_now3 =df_now[df_now['商品コード3']=='HJ']
+
+                st.table(df_now1[['得意先名', '商品コード2', '金額']])
 
             kokusanzai_diff = f'{(kokusanzai_now_t/now_total*100) - (kokusanzai_last_t/last_total*100): 0.1f} %'
             st.metric('国産材比率', value=f'{kokusanzai_now_t/now_total*100: 0.1f} %', delta=kokusanzai_diff) #小数点以下1ケタ
