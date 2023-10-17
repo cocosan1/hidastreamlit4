@@ -1454,9 +1454,15 @@ with tab3:
             kokusanzai_now_t = kokusanzai_now1 + kokusanzai_now2 + kokusanzai_now3
             kokusanzai_last_t = kokusanzai_last1 + kokusanzai_last2 + kokusanzai_last3 
 
-            kokusanzai_diff = f'{(kokusanzai_now_t/now_total*100) - (kokusanzai_last_t/last_total*100): 0.1f} %'
-            st.metric('国産材比率', value=f'{kokusanzai_now_t/now_total*100: 0.1f} %', delta=kokusanzai_diff) #小数点以下1ケタ
-            st.caption(f'前年 {kokusanzai_last_t/last_total*100: 0.1f} %')
+            with st.expander('数値', expanded=False):
+                st.write('売上合計')
+                st.write(total_now)
+                st.write('国産材売上')
+                st.write(kokusanzai_now_t)
+
+            kokusanzai_diff = f'{(kokusanzai_now_t/total_now*100) - (kokusanzai_last_t/last_total*100): 0.1f} %'
+            st.metric('国産材比率', value=f'{kokusanzai_now_t/total_now*100: 0.1f} %', delta=kokusanzai_diff) #小数点以下1ケタ
+            st.caption(f'前年 {kokusanzai_last_t/total_last*100: 0.1f} %')
 
     def profit_aroma():
         col1, col2, col3 = st.columns(3)
