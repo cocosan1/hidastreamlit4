@@ -46,13 +46,14 @@ with col2:
     img_megane = Image.open('img//電卓アイコン.jpg')
     st.image(img_megane, width=50)
     st.markdown('###### 第２世代')
-    # link = '[展示分析&レコメンド](https://cocosan1-recommend-series2-main-7r9cjj.streamlit.app/)'
-    # st.markdown(link, unsafe_allow_html=True)
 
     link = '[分析2 品番別](https://cocosan1-recommend-series2-calc-jbt3a7.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[分析2 シリーズ別](https://recommendseries2-series.streamlit.app/)'
+    link = '[分析2 シリーズ別一覧](https://recommendseries2-series-all.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[分析2 シリーズ別個別](https://recommendseries2-series.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[得意先ランキング/推移](https://recommend-series2-cust.streamlit.app/)'
@@ -61,8 +62,7 @@ with col2:
     link = '[アソシエーション](https://cocosan1-association-fullhinban-cmy4cf.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    # link = '[アイテム別売上予測](https://recommendseries2-pred-itemsales.streamlit.app/)'
-    # st.markdown(link, unsafe_allow_html=True)
+
     
 
 with col3:
