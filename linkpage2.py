@@ -67,6 +67,22 @@ with col1:
 with col2:
     img_megane = Image.open('img//電卓アイコン.jpg')
     st.image(img_megane, width=50)
+    st.markdown('###### 分析(詳細)')
+
+    with st.expander('アプリ概要', expanded=False):
+        st.write('■ 売上分析')
+        st.caption('全体/得意先一覧/得意先個別/エリア/TIF')
+
+
+    st.link_button('売上分析', 'https://cocosan1-hidastreamlit4-allinone2-jv1drl.streamlit.app/')
+    
+
+
+
+
+
+    img_megane = Image.open('img//電卓アイコン.jpg')
+    st.image(img_megane, width=50)
     st.markdown('###### その他')
 
     with st.expander('アプリ概要', expanded=False):
@@ -83,11 +99,6 @@ with col2:
     st.link_button('廃番品の特定、見積', 'https://repairapp-main.streamlit.app/')
     st.link_button('市況状況/全国', 'https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/')
     st.link_button('PDF結合/ハウス', 'https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/')
-
-    st.markdown('###### 分析: 詳細')
-    st.link_button('品番ベース', 'https://cocosan1-recommend-series2-calc-jbt3a7.streamlit.app/')
-    st.link_button('シリーズベース', 'https://recommendseries2-series-all.streamlit.app/')
-
 
 
     # link = '[納期カレンダー作成](https://hidacalender3-calender.streamlit.app/)'
