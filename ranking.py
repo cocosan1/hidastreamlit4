@@ -6,6 +6,7 @@ import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import openpyxl
 import datetime
+import re
 
 from sklearn.preprocessing import StandardScaler
 
@@ -26,7 +27,15 @@ def make_data_now(file):
 
 
     df_now['張地'] = df_now['商　品　名'].apply(lambda x: x.split()[2] if len(x.split()) >= 4 else '')
-    df_now['HTSサイズ'] = df_now['張地'].apply(lambda x: x.split('x')[0]) #HTSサイズ
+
+    # パターンを定義します：'x'または'×'または'*'のいずれかを示す正規表現
+    pattern = re.compile(r'[x×X*]')
+
+    # 張地列を分割して、'HTSサイズ'列に追加します
+    df_now['HTSサイズ'] = df_now['張地'].apply(lambda x: re.split(pattern, x)[0])
+    # df_now['HTSサイズ'] = df_now['張地'].apply(lambda x: x.split('x')[0]) #HTSサイズ
+
+
     df_now['HTS形状'] = df_now['商　品　名'].apply(lambda x: x.split()[1] if len(x.split()) >= 4 else '') #HTS天板形状
     df_now['HTS形状2'] = df_now['HTS形状'].apply(lambda x: x.split('形')[0] if len(x.split('形')) >= 2 else '') #面型抜き
 
@@ -179,10 +188,15 @@ def hts_width():
     df_hts = df_now[df_now['商品コード2']=='HTS2']
     size_list = df_hts['HTSサイズ'].unique() #張地だがサイズを拾える
 
+    st.write(df_hts)
+    st.write(size_list)
+
     #strに型変換してグラフ作成時に順番が動かないようにする
     str_list = []
     for size in size_list:
         str_list.append(str(size))
+
+    
 
     cnt_list = []
     windex = []
@@ -197,7 +211,6 @@ def hts_width():
 
     #オリジナル
     s_wsize = pd.Series(cnt_list, index=windex)
-    s_wsize = s_wsize.head(12)
 
     #ランキング用
     s_wsize2 = s_wsize.sort_values(ascending=False)
