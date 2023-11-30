@@ -188,15 +188,11 @@ def hts_width():
     df_hts = df_now[df_now['商品コード2']=='HTS2']
     size_list = df_hts['HTSサイズ'].unique() #張地だがサイズを拾える
 
-    st.write(df_hts)
-    st.write(size_list)
-
     #strに型変換してグラフ作成時に順番が動かないようにする
     str_list = []
     for size in size_list:
         str_list.append(str(size))
 
-    
 
     cnt_list = []
     windex = []
