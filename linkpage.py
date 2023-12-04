@@ -84,9 +84,9 @@ with col2:
     st.link_button('市況状況/全国', 'https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/')
     st.link_button('PDF結合/ハウス', 'https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/')
 
-    st.markdown('###### 分析: 詳細')
-    st.link_button('品番ベース', 'https://cocosan1-recommend-series2-calc-jbt3a7.streamlit.app/')
-    st.link_button('シリーズベース', 'https://recommendseries2-series-all.streamlit.app/')
+    # st.markdown('###### 分析: 詳細')
+    # st.link_button('品番ベース', 'https://cocosan1-recommend-series2-calc-jbt3a7.streamlit.app/')
+    # st.link_button('シリーズベース', 'https://recommendseries2-series-all.streamlit.app/')
 
 
 
