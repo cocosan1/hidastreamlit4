@@ -79,7 +79,7 @@ with col3:
     link = '[shop/売上予測](https://shoppred-calkweek.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[Q＆A: my DB](https://chatgptnotion-main.streamlit.app/)'
+    link = '[Q＆A: my DB](https://mydbapp-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[Q＆A: 社内](https://hidaapp3-app.streamlit.app/)'
