@@ -94,6 +94,9 @@ with col3:
     link = '[youtube 要約](https://llamayoutube-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[sofa simulator](https://sofasimulator-app.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
     
     
 
