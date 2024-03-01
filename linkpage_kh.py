@@ -29,6 +29,9 @@ with col1:
     link = '[売上分析/年齢層](https://cocosan1-hidastreamlit-kh-age-3wf4ye.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[売上分析/販売員](https://hidastkh-rep.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
     link = '[売上分析/エリア](https://cocosan1-hidastreamlit-kh-area-kh-hiqyx6.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
