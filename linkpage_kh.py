@@ -29,6 +29,9 @@ with col1:
     link = '[売上分析/年齢層](https://cocosan1-hidastreamlit-kh-age-3wf4ye.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[売上分析/販売員](https://hidastkh-rep.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
     link = '[売上分析/エリア](https://cocosan1-hidastreamlit-kh-area-kh-hiqyx6.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
@@ -79,10 +82,10 @@ with col3:
     link = '[shop/売上予測](https://shoppred-calkweek.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[Q＆A: my DB](https://chatgptnotion-main.streamlit.app/)'
+    link = '[Q＆A: my DB](https://mydbapp-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
-    link = '[Q＆A: 社内](https://chatgpthidaapp-main.streamlit.app/)'
+    link = '[Q＆A: 社内](https://hidaapp3-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
     link = '[search file](https://searchfile-app.streamlit.app/)'
@@ -94,6 +97,11 @@ with col3:
     link = '[youtube 要約](https://llamayoutube-app.streamlit.app/)'
     st.markdown(link, unsafe_allow_html=True)
 
+    link = '[sofa image](https://sofasimulator-app.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
+
+    link = '[売り場画像DB](https://uribadb-app.streamlit.app/)'
+    st.markdown(link, unsafe_allow_html=True)
     
     
 
