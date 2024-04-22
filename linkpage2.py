@@ -94,21 +94,14 @@ with col2:
         st.caption('市況情報の取得　※情報は常に最新/着工数は市単位での検索可')
         st.write('■ PDF結合/ハウス')
         st.caption('ハウス　御見積書と明細書の結合/ファイル名はお客様名_見積NOにて作成')
+        st.write('■ ソファ画像の検索')
+        st.caption('ソファの画像を塗色や張地などを指定して検索')
+        st.write('■ 売り場画像の検索')
+        st.caption('売り場の画像を壁紙、床、シリーズなどを指定して検索')
 
     st.link_button('納期カレンダー作成', 'https://hidacalender3-calender.streamlit.app/')
     st.link_button('廃番品の特定、見積', 'https://repairapp-main.streamlit.app/')
     st.link_button('市況状況/全国', 'https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/')
     st.link_button('PDF結合/ハウス', 'https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/')
-
-
-    # link = '[納期カレンダー作成](https://hidacalender3-calender.streamlit.app/)'
-    # st.markdown(link, unsafe_allow_html=True)
-
-    # link = '[廃番品の特定、見積](https://repairapp-main.streamlit.app/)'
-    # st.markdown(link, unsafe_allow_html=True)
-
-    # link = '[市況状況/全国](https://cocosan1-market-condition-main-zenkoku-l78svj.streamlit.app/)'
-    # st.markdown(link, unsafe_allow_html=True)
-
-    # link = '[PDF結合/ハウス](https://cocosan1-pdf-connect-connect-slgprv.streamlit.app/)'
-    # st.markdown(link, unsafe_allow_html=True)
+    st.link_button('ソファ画像の検索', 'https://sofasimulator-app.streamlit.app/')
+    st.link_button('売り場画像の検索', 'https://uribadb-app.streamlit.app/')
